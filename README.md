@@ -72,6 +72,9 @@ pnpm install
 
 ```bash
 pnpm dev
+
+# 启动管理后台的版本
+pnpm dev:play
 ```
 
 4. Build

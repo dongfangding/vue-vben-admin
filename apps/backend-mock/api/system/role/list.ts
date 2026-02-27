@@ -46,7 +46,7 @@ export default eventHandler(async (event) => {
   }
 
   const {
-    page = 1,
+    pageNum = 1,
     pageSize = 20,
     name,
     id,
@@ -80,5 +80,5 @@ export default eventHandler(async (event) => {
   if (['0', '1'].includes(status as string)) {
     listData = listData.filter((item) => item.status === Number(status));
   }
-  return usePageResponseSuccess(page as string, pageSize as string, listData);
+  return usePageResponseSuccess(pageNum as string, pageSize as string, listData);
 });

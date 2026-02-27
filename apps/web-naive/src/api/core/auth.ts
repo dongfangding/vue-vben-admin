@@ -30,7 +30,7 @@ export async function loginApi(data: AuthApi.LoginParams) {
  */
 export async function refreshTokenApi() {
   return baseRequestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
-    withCredentials: true,
+    withCredentials: false,
   });
 }
 
@@ -39,7 +39,7 @@ export async function refreshTokenApi() {
  */
 export async function logoutApi() {
   return baseRequestClient.post('/auth/logout', {
-    withCredentials: true,
+    withCredentials: false,
   });
 }
 

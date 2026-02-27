@@ -23,6 +23,8 @@ import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
+// 判断是否使用 Mock 数据
+const isMock = import.meta.env.VITE_NITRO_MOCK === 'true';
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
     ...options,
@@ -90,30 +92,50 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     defaultResponseInterceptor({
       codeField: 'code',
       dataField: 'data',
-      successCode: 0,
+      successCode: '0',
     }),
   );
 
-  // token过期的处理
-  client.addResponseInterceptor(
-    authenticateResponseInterceptor({
-      client,
-      doReAuthenticate,
-      doRefreshToken,
-      enableRefreshToken: preferences.app.enableRefreshToken,
-      formatToken,
-    }),
-  );
+  // token过期的处理（仅在后端模式启用）
+  if (!isMock) {
+    client.addResponseInterceptor(
+      authenticateResponseInterceptor({
+        client,
+        doReAuthenticate,
+        doRefreshToken,
+        enableRefreshToken: preferences.app.enableRefreshToken,
+        formatToken,
+      }),
+    );
+  }
 
-  // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
+  // 通用的错误处理
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
-      // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
-      // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? '';
-      // 如果没有错误信息，则会根据状态码进行提示
-      message.error(errorMessage || msg);
+      const errorMessage = responseData?.message ?? responseData?.msg ?? '';
+      const errorCode = responseData?.code ?? '';
+
+      const isUnauthorized =
+        errorCode === 401 ||
+        errorCode === '401' ||
+        errorCode === 'UNAUTHORIZED' ||
+        errorMessage.includes('未通过认证') ||
+        errorMessage.includes('未认证') ||
+        error?.response?.status === 401;
+
+      if (isUnauthorized) {
+        const authStore = useAuthStore();
+        authStore.logout(true);
+        return;
+      }
+
+      // 非成功响应（code != 200/0）时弹框提示
+      if (errorMessage) {
+        message.error(errorMessage);
+      } else {
+        message.error(msg);
+      }
     }),
   );
 

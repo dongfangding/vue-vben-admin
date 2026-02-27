@@ -23,7 +23,7 @@ export namespace AuthApi {
  */
 export async function loginApi(data: AuthApi.LoginParams) {
   return requestClient.post<AuthApi.LoginResult>('/auth/login', data, {
-    withCredentials: true,
+    withCredentials: false,
   });
 }
 
@@ -35,7 +35,7 @@ export async function refreshTokenApi() {
     '/auth/refresh',
     null,
     {
-      withCredentials: true,
+      withCredentials: false,
     },
   );
 }
@@ -45,7 +45,7 @@ export async function refreshTokenApi() {
  */
 export async function logoutApi() {
   return baseRequestClient.post('/auth/logout', null, {
-    withCredentials: true,
+    withCredentials: false,
   });
 }
 

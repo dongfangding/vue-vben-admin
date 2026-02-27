@@ -4,10 +4,14 @@ import { setResponseStatus } from 'h3';
 
 export function useResponseSuccess<T = any>(data: T) {
   return {
-    code: 0,
+    code: '0',
     data,
     error: null,
-    message: 'ok',
+    message: '操作成功',
+    subMessage: '',
+    timestamp: Date.now(),
+    extra: {},
+    formatParams: [],
   };
 }
 
@@ -15,29 +19,42 @@ export function usePageResponseSuccess<T = any>(
   page: number | string,
   pageSize: number | string,
   list: T[],
-  { message = 'ok' } = {},
+  { message = '操作成功' } = {},
 ) {
-  const pageData = pagination(
-    Number.parseInt(`${page}`),
-    Number.parseInt(`${pageSize}`),
-    list,
-  );
+  const pageNum = Number.parseInt(`${page}`);
+  const pageSizeNum = Number.parseInt(`${pageSize}`);
+  const total = list.length;
+  const totalPage = Math.ceil(total / pageSizeNum);
+  const pageData = pagination(pageNum, pageSizeNum, list);
 
   return {
-    ...useResponseSuccess({
-      items: pageData,
-      total: list.length,
-    }),
+    code: '0',
+    data: {
+      pageNum,
+      pageSize: pageSizeNum,
+      totalPage,
+      total,
+      content: pageData,
+    },
+    error: null,
     message,
+    subMessage: '',
+    timestamp: Date.now(),
+    extra: {},
+    formatParams: [],
   };
 }
 
 export function useResponseError(message: string, error: any = null) {
   return {
-    code: -1,
+    code: '-1',
     data: null,
     error,
     message,
+    subMessage: '',
+    timestamp: Date.now(),
+    extra: {},
+    formatParams: [],
   };
 }
 
@@ -51,7 +68,16 @@ export function forbiddenResponse(
 
 export function unAuthorizedResponse(event: H3Event<EventHandlerRequest>) {
   setResponseStatus(event, 401);
-  return useResponseError('Unauthorized Exception', 'Unauthorized Exception');
+  return {
+    code: '401',
+    data: null,
+    error: 'Unauthorized Exception',
+    message: '未授权',
+    subMessage: 'Unauthorized Exception',
+    timestamp: Date.now(),
+    extra: {},
+    formatParams: [],
+  };
 }
 
 export function sleep(ms: number) {
