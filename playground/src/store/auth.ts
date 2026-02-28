@@ -35,7 +35,6 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       loginLoading.value = true;
       const { accessToken } = await loginApi(params);
-      console.error(accessToken);
       // 如果成功获取到 accessToken
       if (accessToken) {
         accessStore.setAccessToken(accessToken);

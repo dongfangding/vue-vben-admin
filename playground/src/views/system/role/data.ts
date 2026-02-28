@@ -102,7 +102,11 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
     },
     {
       cellRender: {
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          checkedValue: true,
+          unCheckedValue: false,
+        },
         name: onStatusChange ? 'CellSwitch' : 'CellTag',
       },
       field: 'enable',

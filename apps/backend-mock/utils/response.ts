@@ -4,7 +4,7 @@ import { setResponseStatus } from 'h3';
 
 export function useResponseSuccess<T = any>(data: T) {
   return {
-    code: '0',
+    code: '200',
     data,
     error: null,
     message: '操作成功',

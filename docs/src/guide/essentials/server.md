@@ -256,6 +256,7 @@ function createRequestClient(baseURL: string) {
       const accessStore = useAccessStore();
 
       config.headers.Authorization = formatToken(accessStore.accessToken);
+      config.headers['access-token'] = accessStore.accessToken;
       config.headers['Accept-Language'] = preferences.app.locale;
       return config;
     },

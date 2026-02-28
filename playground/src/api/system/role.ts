@@ -50,7 +50,15 @@ async function updateRole(
   roleId: number,
   data: Omit<SystemRoleApi.SystemRole, 'roleId'>,
 ) {
-  return requestClient.put('sys-role/persist', { ...data, roleId });
+  return requestClient.post('sys-role/persist', { ...data, roleId });
+}
+
+/**
+ * 删除角色
+ * @param roleId 角色 ID
+ */
+async function updateEnable(roleId: number, enable: boolean) {
+  return requestClient.post('sys-role/enable', { id: roleId, enable });
 }
 
 /**
@@ -61,4 +69,4 @@ async function deleteRole(roleId: number) {
   return requestClient.post('sys-role/delete', { ids: [roleId] });
 }
 
-export { createRole, deleteRole, getRoleList, updateRole };
+export { createRole, deleteRole, getRoleList, updateEnable, updateRole };

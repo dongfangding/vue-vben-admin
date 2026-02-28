@@ -75,8 +75,14 @@ export function useColumns(
       title: $t('system.menu.component'),
     },
     {
-      cellRender: { name: 'CellTag' },
-      field: 'status',
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          { color: 'success', label: '启用', value: true },
+          { color: 'error', label: '禁用', value: false },
+        ],
+      },
+      field: 'enable',
       title: $t('system.menu.status'),
       width: 100,
     },
