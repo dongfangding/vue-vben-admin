@@ -66,7 +66,7 @@ async function updateEnable(roleId: number, enable: boolean) {
  * @param roleId 角色 ID
  */
 async function deleteRole(roleId: number) {
-  return requestClient.post('sys-role/delete', { ids: [roleId] });
+  return requestClient.post('sys-role/delete', { id: roleId });
 }
 
 export { createRole, deleteRole, getRoleList, updateEnable, updateRole };

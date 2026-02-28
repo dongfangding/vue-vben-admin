@@ -110,6 +110,7 @@ setupVbenVxeTable({
           unCheckedChildren: $t('common.disabled'),
           unCheckedValue: 0,
           ...props,
+          ...attrs,   // 合并 attrs，确保用户的配置生效
           checked: row[column.field],
           loading: row[loadingKey] ?? false,
           'onUpdate:checked': onChange,

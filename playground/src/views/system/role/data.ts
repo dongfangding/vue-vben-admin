@@ -93,7 +93,7 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
     {
       field: 'name',
       title: $t('system.role.roleName'),
-      width: 150,
+      width: 200,
     },
     {
       field: 'level',
@@ -111,7 +111,7 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
       },
       field: 'enable',
       title: $t('system.role.enable'),
-      width: 100,
+      width: 120,
     },
     {
       field: 'description',
