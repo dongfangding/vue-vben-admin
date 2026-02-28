@@ -31,14 +31,14 @@ const [Form, formApi] = useVbenForm({
 const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
 
-const id = ref();
+const roleId = ref<number>();
 const [Drawer, drawerApi] = useVbenDrawer({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    (id.value ? updateRole(id.value, values) : createRole(values))
+    (roleId.value ? updateRole(roleId.value, values) : createRole(values))
       .then(() => {
         emits('success');
         drawerApi.close();
@@ -55,9 +55,9 @@ const [Drawer, drawerApi] = useVbenDrawer({
 
       if (data) {
         formData.value = data;
-        id.value = data.id;
+        roleId.value = data.roleId;
       } else {
-        id.value = undefined;
+        roleId.value = undefined;
       }
 
       if (permissions.value.length === 0) {
@@ -83,7 +83,7 @@ async function loadPermissions() {
 }
 
 const getDrawerTitle = computed(() => {
-  return formData.value?.id
+  return formData.value?.roleId
     ? $t('common.edit', $t('system.role.name'))
     : $t('common.create', $t('system.role.name'));
 });

@@ -56,10 +56,15 @@
     "roleName": "Role Name",
     "id": "Role ID",
     "status": "Status",
+    "enable": "Enable",
     "remark": "Remark",
     "createTime": "Creation Time",
     "operation": "Operation",
     "permissions": "Permissions",
-    "setPermissions": "Permissions"
+    "setPermissions": "Permissions",
+    "level": "Role Level",
+    "ipLimit": "IP Whitelist",
+    "sort": "Sort Order",
+    "isAdmin": "Is Admin"
   }
 }
