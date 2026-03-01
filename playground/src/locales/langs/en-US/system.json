@@ -28,7 +28,7 @@
     "path": "Route Path",
     "component": "Component",
     "status": "Status",
-    "authCode": "Auth Code",
+    "permission": "Auth Code",
     "badge": "Badge",
     "operation": "Operation",
     "linkSrc": "Link Address",

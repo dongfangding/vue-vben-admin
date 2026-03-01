@@ -42,8 +42,8 @@ export function useColumns(
       width: 100,
     },
     {
-      field: 'authCode',
-      title: $t('system.menu.authCode'),
+      field: 'permission',
+      title: $t('system.menu.permission'),
       width: 200,
     },
     {
@@ -77,6 +77,10 @@ export function useColumns(
     {
       cellRender: {
         name: 'CellTag',
+        attrs: {
+          checkedValue: true,
+          unCheckedValue: false,
+        },
         options: [
           { color: 'success', label: '启用', value: true },
           { color: 'error', label: '禁用', value: false },

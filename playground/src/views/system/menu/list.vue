@@ -39,7 +39,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
     rowConfig: {
-      keyField: 'id',
+      keyField: 'menuId',
     },
     toolbarConfig: {
       custom: true,
@@ -49,7 +49,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     treeConfig: {
       parentField: 'pid',
-      rowField: 'id',
+      rowField: 'menuId',
       transform: false,
     },
   } as VxeTableGridOptions,
@@ -88,7 +88,7 @@ function onCreate() {
   formDrawerApi.setData({}).open();
 }
 function onAppend(row: SystemMenuApi.SystemMenu) {
-  formDrawerApi.setData({ pid: row.id }).open();
+  formDrawerApi.setData({ pid: row.menuId }).open();
 }
 
 function onDelete(row: SystemMenuApi.SystemMenu) {
@@ -97,7 +97,7 @@ function onDelete(row: SystemMenuApi.SystemMenu) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteMenu(row.id)
+  deleteMenu(row.menuId)
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),

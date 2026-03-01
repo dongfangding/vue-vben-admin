@@ -1,0 +1,293 @@
+{
+  "code": "200",
+  "message": "200",
+  "subMessage": "请求成功",
+  "timestamp": 1772377917154,
+  "data": [
+    {
+      "menuId": 10,
+      "status": 1,
+      "pid": 0,
+      "name": "About",
+      "path": "/about",
+      "component": "_core/about/index",
+      "meta": {
+        "order": 9999
+      },
+      "type": "menu",
+      "icon": "lucide:copyright",
+      "children": [],
+      "treeId": 10,
+      "treeParentId": 0,
+      "root": true
+    },
+    {
+      "menuId": 9,
+      "status": 1,
+      "pid": 0,
+      "name": "Project",
+      "path": "/vben-admin",
+      "component": null,
+      "meta": {
+        "order": 9998
+      },
+      "type": "catelog",
+      "icon": "carbon:data-center",
+      "children": [
+        {
+          "menuId": 903,
+          "status": 1,
+          "pid": 9,
+          "name": "VbenAntdv",
+          "path": "/vben-admin/antdv",
+          "component": "IFrameView",
+          "meta": {
+            "link": "https://ant.vben.pro",
+            "badgeType": "dot"
+          },
+          "type": "menu",
+          "icon": "carbon:hexagon-vertical-solid",
+          "children": [],
+          "treeId": 903,
+          "treeParentId": 9,
+          "root": false
+        },
+        {
+          "menuId": 902,
+          "status": 1,
+          "pid": 9,
+          "name": "VbenGithub",
+          "path": "/vben-admin/github",
+          "component": "IFrameView",
+          "meta": {
+            "link": "https://github.com/vbenjs/vue-vben-admin"
+          },
+          "type": "menu",
+          "icon": "carbon:logo-github",
+          "children": [],
+          "treeId": 902,
+          "treeParentId": 9,
+          "root": false
+        },
+        {
+          "menuId": 901,
+          "status": 1,
+          "pid": 9,
+          "name": "VbenDocument",
+          "path": "/vben-admin/document",
+          "component": "IFrameView",
+          "meta": {
+            "iframeSrc": "https://doc.vben.pro"
+          },
+          "type": "menu",
+          "icon": "carbon:book",
+          "children": [],
+          "treeId": 901,
+          "treeParentId": 9,
+          "root": false
+        }
+      ],
+      "treeId": 9,
+      "treeParentId": 0,
+      "root": true
+    },
+    {
+      "menuId": 2,
+      "status": 1,
+      "pid": 0,
+      "name": "System",
+      "path": "/system",
+      "component": null,
+      "meta": {
+        "order": 9998,
+        "badge": "new",
+        "badgeType": "normal",
+        "badgeVariants": "primary"
+      },
+      "type": "catelog",
+      "icon": "carbon:settings",
+      "children": [
+        {
+          "menuId": 202,
+          "status": 1,
+          "pid": 2,
+          "name": "SystemDept",
+          "path": "/system/dept",
+          "component": "/system/dept/list",
+          "meta": {},
+          "type": "menu",
+          "icon": "carbon:container-services",
+          "children": [
+            {
+              "menuId": 20203,
+              "status": 1,
+              "pid": 202,
+              "name": "SystemDeptDelete",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20203,
+              "treeParentId": 202,
+              "root": false
+            },
+            {
+              "menuId": 20202,
+              "status": 1,
+              "pid": 202,
+              "name": "SystemDeptEdit",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20202,
+              "treeParentId": 202,
+              "root": false
+            },
+            {
+              "menuId": 20201,
+              "status": 1,
+              "pid": 202,
+              "name": "SystemDeptCreate",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20201,
+              "treeParentId": 202,
+              "root": false
+            }
+          ],
+          "treeId": 202,
+          "treeParentId": 2,
+          "root": false
+        },
+        {
+          "menuId": 201,
+          "status": 1,
+          "pid": 2,
+          "name": "SystemMenu",
+          "path": "/system/menu",
+          "component": "/system/menu/list",
+          "meta": {},
+          "type": "menu",
+          "icon": "carbon:menu",
+          "children": [
+            {
+              "menuId": 20103,
+              "status": 1,
+              "pid": 201,
+              "name": "SystemMenuDelete",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20103,
+              "treeParentId": 201,
+              "root": false
+            },
+            {
+              "menuId": 20102,
+              "status": 1,
+              "pid": 201,
+              "name": "SystemMenuEdit",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20102,
+              "treeParentId": 201,
+              "root": false
+            },
+            {
+              "menuId": 20101,
+              "status": 1,
+              "pid": 201,
+              "name": "SystemMenuCreate",
+              "path": "",
+              "component": null,
+              "meta": {},
+              "type": "button",
+              "icon": "",
+              "children": [],
+              "treeId": 20101,
+              "treeParentId": 201,
+              "root": false
+            }
+          ],
+          "treeId": 201,
+          "treeParentId": 2,
+          "root": false
+        }
+      ],
+      "treeId": 2,
+      "treeParentId": 0,
+      "root": true
+    },
+    {
+      "menuId": 1,
+      "status": 1,
+      "pid": 0,
+      "name": "Dashboard",
+      "path": "/dashboard",
+      "component": null,
+      "meta": {
+        "order": -1
+      },
+      "type": "catelog",
+      "icon": "",
+      "children": [
+        {
+          "menuId": 102,
+          "status": 1,
+          "pid": 1,
+          "name": "Workspace",
+          "path": "/workspace",
+          "component": "/dashboard/workspace/index",
+          "meta": {
+            "affixTab": true
+          },
+          "type": "menu",
+          "icon": "",
+          "children": [],
+          "treeId": 102,
+          "treeParentId": 1,
+          "root": false
+        },
+        {
+          "menuId": 101,
+          "status": 1,
+          "pid": 1,
+          "name": "Analytics",
+          "path": "/analytics",
+          "component": "/dashboard/analytics/index",
+          "meta": {
+            "affixTab": true
+          },
+          "type": "menu",
+          "icon": "",
+          "children": [],
+          "treeId": 101,
+          "treeParentId": 1,
+          "root": false
+        }
+      ],
+      "treeId": 1,
+      "treeParentId": 0,
+      "root": true
+    }
+  ],
+  "extra": null,
+  "formatParams": null,
+  "success": true
+}

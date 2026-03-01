@@ -52,7 +52,6 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (isOpen) {
       const data = drawerApi.getData<SystemRoleApi.SystemRole>();
       formApi.resetForm();
-
       if (data) {
         formData.value = data;
         roleId.value = data.roleId;

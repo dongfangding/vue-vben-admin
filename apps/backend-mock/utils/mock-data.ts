@@ -227,7 +227,7 @@ export const MOCK_MENU_LIST = [
         pid: 2,
         path: '/system/menu',
         name: 'SystemMenu',
-        authCode: 'System:Menu:List',
+        permission: 'System:Menu:List',
         status: 1,
         type: 'menu',
         meta: {
@@ -242,7 +242,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuCreate',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Create',
+            permission: 'System:Menu:Create',
             meta: { title: 'common.create' },
           },
           {
@@ -251,7 +251,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuEdit',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Edit',
+            permission: 'System:Menu:Edit',
             meta: { title: 'common.edit' },
           },
           {
@@ -260,7 +260,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuDelete',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Delete',
+            permission: 'System:Menu:Delete',
             meta: { title: 'common.delete' },
           },
         ],
@@ -272,7 +272,7 @@ export const MOCK_MENU_LIST = [
         name: 'SystemDept',
         status: 1,
         type: 'menu',
-        authCode: 'System:Dept:List',
+        permission: 'System:Dept:List',
         meta: {
           icon: 'carbon:container-services',
           title: 'system.dept.title',
@@ -285,7 +285,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemDeptCreate',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Create',
+            permission: 'System:Dept:Create',
             meta: { title: 'common.create' },
           },
           {
@@ -294,7 +294,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemDeptEdit',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Edit',
+            permission: 'System:Dept:Edit',
             meta: { title: 'common.edit' },
           },
           {
@@ -303,7 +303,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemDeptDelete',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Delete',
+            permission: 'System:Dept:Delete',
             meta: { title: 'common.delete' },
           },
         ],

@@ -56,7 +56,7 @@ const schema: VbenFormSchema[] = [
       .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
       .refine(
         async (value: string) => {
-          return !(await isMenuNameExists(value, formData.value?.id));
+          return !(await isMenuNameExists(value, formData.value?.menuId));
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -83,7 +83,7 @@ const schema: VbenFormSchema[] = [
       labelField: 'meta.title',
       showSearch: true,
       treeDefaultExpandAll: true,
-      valueField: 'id',
+      valueField: 'menuId',
       childrenField: 'children',
     },
     fieldName: 'pid',
@@ -139,7 +139,7 @@ const schema: VbenFormSchema[] = [
       )
       .refine(
         async (value: string) => {
-          return !(await isMenuPathExists(value, formData.value?.id));
+          return !(await isMenuPathExists(value, formData.value?.menuId));
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -171,7 +171,7 @@ const schema: VbenFormSchema[] = [
         $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
       )
       .refine(async (value: string) => {
-        return await isMenuPathExists(value, formData.value?.id);
+        return await isMenuPathExists(value, formData.value?.menuId);
       }, $t('system.menu.activePathMustExist'))
       .optional(),
   },
@@ -248,8 +248,8 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    fieldName: 'authCode',
-    label: $t('system.menu.authCode'),
+    fieldName: 'permission',
+    label: $t('system.menu.permission'),
   },
   {
     component: 'RadioGroup',
@@ -481,8 +481,8 @@ async function onSubmit() {
     }
     delete data.linkSrc;
     try {
-      await (formData.value?.id
-        ? updateMenu(formData.value.id, data)
+      await (formData.value?.menuId
+        ? updateMenu(formData.value.menuId, data)
         : createMenu(data));
       drawerApi.close();
       emit('success');
@@ -492,7 +492,7 @@ async function onSubmit() {
   }
 }
 const getDrawerTitle = computed(() =>
-  formData.value?.id
+  formData.value?.menuId
     ? $t('ui.actionTitle.edit', [$t('system.menu.name')])
     : $t('ui.actionTitle.create', [$t('system.menu.name')]),
 );
