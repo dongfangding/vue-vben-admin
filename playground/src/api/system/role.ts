@@ -14,8 +14,8 @@ export namespace SystemRoleApi {
     ipLimit?: string;
     isAdmin: boolean;
     level: number;
+    menuIds: (number | string)[];
     name: string;
-    permissions: string[];
     roleId: number;
     sort: number;
     updateBy?: string;

@@ -43,7 +43,7 @@ function generateMockDataList(count: number) {
       isAdmin: faker.datatype.boolean(),
       createBy: faker.person.fullName(),
       updateBy: faker.person.fullName(),
-      permissions: faker.helpers.arrayElements(menuIds),
+      menuIds: faker.helpers.arrayElements(menuIds),
     };
 
     dataList.push(dataItem);

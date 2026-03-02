@@ -85,6 +85,8 @@ export namespace SystemMenuApi {
     pid: number;
     /** 重定向 */
     redirect?: string;
+    /** 标题 */
+    title: string;
     /** 菜单类型 */
     type: (typeof MenuTypes)[number];
   }
@@ -118,7 +120,8 @@ async function isMenuPathExists(path: string, menuId?: number) {
 async function createMenu(
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'menuId'>,
 ) {
-  return requestClient.post('/system/menu', data);
+  data.title = data.meta.title;
+  return requestClient.post('/sys-menu/persist', data);
 }
 
 /**
@@ -131,7 +134,9 @@ async function updateMenu(
   menuId: number,
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'menuId'>,
 ) {
-  return requestClient.put(`/system/menu/${menuId}`, data);
+  data.title = data.meta.title;
+  data.menuId = menuId;
+  return requestClient.post('/sys-menu/persist', data);
 }
 
 /**
@@ -139,7 +144,7 @@ async function updateMenu(
  * @param menuId 菜单 ID
  */
 async function deleteMenu(menuId: number) {
-  return requestClient.delete(`/system/menu/${menuId}`);
+  return requestClient.post(`/sys-menu/delete`, { id: menuId });
 }
 
 export {
