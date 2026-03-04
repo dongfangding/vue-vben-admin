@@ -237,7 +237,7 @@ export const MOCK_MENU_LIST = [
         component: '/system/menu/list',
         children: [
           {
-            id: 20101,
+            id: 20_101,
             pid: 201,
             name: 'SystemMenuCreate',
             status: 1,
@@ -246,7 +246,7 @@ export const MOCK_MENU_LIST = [
             meta: { title: 'common.create' },
           },
           {
-            id: 20102,
+            id: 20_102,
             pid: 201,
             name: 'SystemMenuEdit',
             status: 1,
@@ -255,7 +255,7 @@ export const MOCK_MENU_LIST = [
             meta: { title: 'common.edit' },
           },
           {
-            id: 20103,
+            id: 20_103,
             pid: 201,
             name: 'SystemMenuDelete',
             status: 1,
@@ -280,7 +280,7 @@ export const MOCK_MENU_LIST = [
         component: '/system/dept/list',
         children: [
           {
-            id: 20201,
+            id: 20_201,
             pid: 202,
             name: 'SystemDeptCreate',
             status: 1,
@@ -289,7 +289,7 @@ export const MOCK_MENU_LIST = [
             meta: { title: 'common.create' },
           },
           {
-            id: 20202,
+            id: 20_202,
             pid: 202,
             name: 'SystemDeptEdit',
             status: 1,
@@ -298,7 +298,7 @@ export const MOCK_MENU_LIST = [
             meta: { title: 'common.edit' },
           },
           {
-            id: 20203,
+            id: 20_203,
             pid: 202,
             name: 'SystemDeptDelete',
             status: 1,

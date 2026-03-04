@@ -235,7 +235,7 @@ const schema: VbenFormSchema[] = [
       optionType: 'button',
     },
     defaultValue: true,
-    fieldName: 'enable',
+    fieldName: 'enabled',
     label: $t('system.menu.status'),
   },
   {

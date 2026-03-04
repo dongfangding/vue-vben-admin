@@ -4,10 +4,15 @@ export namespace SystemDeptApi {
   export interface SystemDept {
     [key: string]: any;
     children?: SystemDept[];
-    id: string;
+    createBy: string;
+    createTime: number;
+    deptId: number;
+    description?: string;
+    enabled: boolean;
     name: string;
-    remark?: string;
-    status: 0 | 1;
+    pid: number;
+    sort: number;
+    subCount: number;
   }
 }
 

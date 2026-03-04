@@ -63,7 +63,9 @@
     "permissions": "Permissions",
     "setPermissions": "Permissions",
     "level": "Role Level",
+    "levelHelp": "The smaller the number, the higher the level. Low-level characters cannot operate high-level character data.",
     "ipLimit": "IP Whitelist",
+    "ipLimitHelp": "When specifying an IP, only matching IPs can be logged in. Multiple ones are separated by commas.",
     "sort": "Sort Order",
     "isAdmin": "Is Admin"
   }

@@ -76,6 +76,8 @@ async function loadPermissions() {
   try {
     const res = await getMenuList();
     permissions.value = res as unknown as DataNode[];
+    // eslint-disable-next-line no-console
+    console.log(permissions.value);
   } finally {
     loadingPermissions.value = false;
   }
@@ -99,7 +101,7 @@ function getNodeClass(node: Recordable<any>) {
 <template>
   <Drawer :title="getDrawerTitle">
     <Form>
-      <template #permissions="slotProps">
+      <template #menuIds="slotProps">
         <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">
           <Tree
             :tree-data="permissions"
@@ -108,7 +110,7 @@ function getNodeClass(node: Recordable<any>) {
             :default-expanded-level="2"
             :get-node-class="getNodeClass"
             v-bind="slotProps"
-            value-field="id"
+            value-field="menuId"
             label-field="meta.title"
             icon-field="meta.icon"
           >

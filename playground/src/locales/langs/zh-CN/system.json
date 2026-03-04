@@ -65,7 +65,9 @@
     "permissions": "权限",
     "setPermissions": "授权",
     "level": "角色级别",
+    "levelHelp": "数字越小等级越高，低层级的角色无法操作高等级的角色数据",
     "ipLimit": "IP白名单",
+    "ipLimitHelp": "当指定ip时，只有匹配的ip才可以登录，多个用英文逗号分隔",
     "sort": "排序",
     "isAdmin": "是否超管"
   }

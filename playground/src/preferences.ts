@@ -10,6 +10,6 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     name: import.meta.env.VITE_APP_TITLE,
     // 启用后端权限模式，菜单从后端获取
-    accessMode: 'backend',
+    accessMode: 'frontend',
   },
 });

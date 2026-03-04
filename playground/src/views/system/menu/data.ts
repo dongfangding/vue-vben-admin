@@ -86,7 +86,7 @@ export function useColumns(
           { color: 'error', label: '禁用', value: false },
         ],
       },
-      field: 'enable',
+      field: 'enabled',
       title: $t('system.menu.status'),
       width: 100,
     },

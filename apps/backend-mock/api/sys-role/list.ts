@@ -31,7 +31,7 @@ function generateMockDataList(count: number) {
     const dataItem: Record<string, any> = {
       roleId: i + 1,
       name: faker.commerce.product(),
-      enable: faker.datatype.boolean(),
+      enabled: faker.datatype.boolean(),
       createTime: Math.floor(createDate.getTime() / 1000),
       updateTime: Math.floor(updateDate.getTime() / 1000),
       formatCreateTime: formatDate(createDate),
@@ -68,7 +68,7 @@ export default eventHandler(async (event) => {
     description,
     startTime,
     endTime,
-    enable,
+    enabled,
   } = getQuery(event);
   let listData = structuredClone(mockData);
   if (name) {
@@ -94,8 +94,8 @@ export default eventHandler(async (event) => {
   if (endTime) {
     listData = listData.filter((item) => item.createTime <= endTime);
   }
-  if (['false', 'true'].includes(enable as string)) {
-    listData = listData.filter((item) => item.enable === (enable === 'true'));
+  if (['false', 'true'].includes(enabled as string)) {
+    listData = listData.filter((item) => item.enable === (enabled === 'true'));
   }
   return usePageResponseSuccess(
     pageNum as string,

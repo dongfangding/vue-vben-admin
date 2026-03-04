@@ -8,7 +8,7 @@
 
 | 接口 | 方法 | 路径 |
 |------|------|------|
-| 获取菜单列表 | GET | `/menu/list` 或 `/sys-menu/menu/list` |
+| 获取菜单列表 | GET | `/menu/list` 或 `/sys-menu/list` |
 | 创建菜单 | POST | `/system/menu` |
 | 更新菜单 | PUT | `/system/menu/{id}` |
 | 删除菜单 | DELETE | `/system/menu/{id}` |

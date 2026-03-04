@@ -8,7 +8,7 @@ export namespace SystemRoleApi {
     createBy?: string;
     createTime: number;
     description?: string;
-    enable: boolean;
+    enabled: boolean;
     formatCreateTime: string;
     formatUpdateTime: string;
     ipLimit?: string;
@@ -57,8 +57,8 @@ async function updateRole(
  * 删除角色
  * @param roleId 角色 ID
  */
-async function updateEnable(roleId: number, enable: boolean) {
-  return requestClient.post('sys-role/enable', { id: roleId, enable });
+async function updateEnable(roleId: number, enabled: boolean) {
+  return requestClient.post('sys-role/enable', { id: roleId, enabled });
 }
 
 /**

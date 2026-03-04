@@ -28,6 +28,8 @@ export namespace SystemMenuApi {
     children?: SystemMenu[];
     /** 组件 */
     component?: string;
+    /** 是否启用 */
+    enabled: boolean;
     /** 菜单ID */
     menuId: number;
     /** 菜单元数据 */
