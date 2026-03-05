@@ -55,7 +55,7 @@ function onDelete(row: SystemDeptApi.SystemDept) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteDept(row.id)
+  deleteDept(row.deptId)
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),

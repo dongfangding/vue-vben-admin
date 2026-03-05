@@ -39,8 +39,8 @@ const [Modal, modalApi] = useVbenModal({
       modalApi.lock();
       const data = await formApi.getValues();
       try {
-        await (formData.value?.id
-          ? updateDept(formData.value.id, data)
+        await (formData.value?.deptId
+          ? updateDept(formData.value.deptId, data)
           : createDept(data));
         modalApi.close();
         emit('success');
@@ -54,7 +54,7 @@ const [Modal, modalApi] = useVbenModal({
       const data = modalApi.getData<SystemDeptApi.SystemDept>();
       if (data) {
         if (data.pid === 0) {
-          data.pid = undefined;
+          data.pid = 0;
         }
         formData.value = data;
         formApi.setValues(formData.value);

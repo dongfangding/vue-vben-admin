@@ -32,7 +32,7 @@ export function useSchema(): VbenFormSchema[] {
         api: getDeptList,
         class: 'w-full',
         labelField: 'name',
-        valueField: 'id',
+        valueField: 'deptId',
         childrenField: 'children',
       },
       fieldName: 'pid',
@@ -43,13 +43,13 @@ export function useSchema(): VbenFormSchema[] {
       componentProps: {
         buttonStyle: 'solid',
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          { label: $t('common.enabled'), value: true },
+          { label: $t('common.disabled'), value: false },
         ],
         optionType: 'button',
       },
-      defaultValue: 1,
-      fieldName: 'status',
+      defaultValue: true,
+      fieldName: 'enabled',
       label: $t('system.dept.status'),
     },
     {
@@ -59,7 +59,7 @@ export function useSchema(): VbenFormSchema[] {
         rows: 3,
         showCount: true,
       },
-      fieldName: 'remark',
+      fieldName: 'description',
       label: $t('system.dept.remark'),
       rules: z
         .string()
@@ -87,18 +87,28 @@ export function useColumns(
       width: 150,
     },
     {
-      cellRender: { name: 'CellTag' },
-      field: 'status',
+      cellRender: {
+        name: 'CellTag',
+        attrs: {
+          checkedValue: true,
+          unCheckedValue: false,
+        },
+        options: [
+          { color: 'success', label: $t('common.enabled'), value: true },
+          { color: 'error', label: $t('common.disabled'), value: false },
+        ],
+      },
+      field: 'enabled',
       title: $t('system.dept.status'),
       width: 100,
     },
     {
-      field: 'createTime',
+      field: 'formatCreateTime',
       title: $t('system.dept.createTime'),
       width: 180,
     },
     {
-      field: 'remark',
+      field: 'description',
       title: $t('system.dept.remark'),
     },
     {

@@ -20,9 +20,7 @@ export namespace SystemDeptApi {
  * 获取部门列表数据
  */
 async function getDeptList() {
-  return requestClient.get<Array<SystemDeptApi.SystemDept>>(
-    '/system/dept/list',
-  );
+  return requestClient.get<Array<SystemDeptApi.SystemDept>>('/sys-dept/list');
 }
 
 /**
@@ -30,9 +28,9 @@ async function getDeptList() {
  * @param data 部门数据
  */
 async function createDept(
-  data: Omit<SystemDeptApi.SystemDept, 'children' | 'id'>,
+  data: Omit<SystemDeptApi.SystemDept, 'children' | 'deptId'>,
 ) {
-  return requestClient.post('/system/dept', data);
+  return requestClient.post('/sys-dept/persist', data);
 }
 
 /**
@@ -42,18 +40,19 @@ async function createDept(
  * @param data 部门数据
  */
 async function updateDept(
-  id: string,
-  data: Omit<SystemDeptApi.SystemDept, 'children' | 'id'>,
+  deptId: number,
+  data: Omit<SystemDeptApi.SystemDept, 'children' | 'deptId'>,
 ) {
-  return requestClient.put(`/system/dept/${id}`, data);
+  data.deptId = deptId;
+  return requestClient.post('/sys-dept/persist', data);
 }
 
 /**
  * 删除部门
- * @param id 部门 ID
+ * @param deptId 部门 ID
  */
-async function deleteDept(id: string) {
-  return requestClient.delete(`/system/dept/${id}`);
+async function deleteDept(deptId: number) {
+  return requestClient.post(`/sys-dept/delete`, { ids: [deptId] });
 }
 
 export { createDept, deleteDept, getDeptList, updateDept };

@@ -82,8 +82,8 @@ export function useColumns(
           unCheckedValue: false,
         },
         options: [
-          { color: 'success', label: '启用', value: true },
-          { color: 'error', label: '禁用', value: false },
+          { color: 'success', label: $t('common.enabled'), value: true },
+          { color: 'error', label: $t('common.disabled'), value: false },
         ],
       },
       field: 'enabled',
