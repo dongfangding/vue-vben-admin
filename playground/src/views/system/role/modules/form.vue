@@ -76,8 +76,6 @@ async function loadPermissions() {
   try {
     const res = await getMenuList();
     permissions.value = res as unknown as DataNode[];
-    // eslint-disable-next-line no-console
-    console.log(permissions.value);
   } finally {
     loadingPermissions.value = false;
   }

@@ -1,5 +1,29 @@
 {
   "title": "系统管理",
+  "user": {
+    "title": "用户管理",
+    "list": "用户列表",
+    "name": "用户",
+    "id": "用户ID",
+    "username": "用户名",
+    "nickname": "昵称",
+    "email": "邮箱",
+    "mobile": "手机号码",
+    "sex": "性别",
+    "male": "男",
+    "female": "女",
+    "avatar": "头像",
+    "password": "密码",
+    "role": "角色",
+    "dept": "部门",
+    "deptTree": "部门树",
+    "allDept": "全部部门",
+    "status": "状态",
+    "enabled": "启用",
+    "disabled": "禁用",
+    "createTime": "创建时间",
+    "operation": "操作"
+  },
   "dept": {
     "list": "部门列表",
     "createTime": "创建时间",
@@ -67,7 +91,7 @@
     "level": "角色级别",
     "levelHelp": "数字越小等级越高，低层级的角色无法操作高等级的角色数据",
     "ipLimit": "IP白名单",
-    "ipLimitHelp": "当指定ip时，只有匹配的ip才可以登录，多个用英文逗号分隔",
+    "ipLimitHelp": "当指定IP时，只有匹配的IP才可以登录，多个用英文逗号分隔",
     "sort": "排序",
     "isAdmin": "是否超管"
   }

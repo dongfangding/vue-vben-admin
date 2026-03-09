@@ -54,10 +54,10 @@ async function updateRole(
 }
 
 /**
- * 删除角色
+ * 更新状态
  * @param roleId 角色 ID
  */
-async function updateEnable(roleId: number, enabled: boolean) {
+async function updateRoleEnable(roleId: number, enabled: boolean) {
   return requestClient.post('sys-role/enable', { id: roleId, enabled });
 }
 
@@ -69,4 +69,4 @@ async function deleteRole(roleId: number) {
   return requestClient.post('sys-role/delete', { id: roleId });
 }
 
-export { createRole, deleteRole, getRoleList, updateEnable, updateRole };
+export { createRole, deleteRole, getRoleList, updateRole, updateRoleEnable };
