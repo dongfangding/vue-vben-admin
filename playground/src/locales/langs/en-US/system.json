@@ -92,5 +92,14 @@
     "ipLimitHelp": "When specifying an IP, only matching IPs can be logged in. Multiple ones are separated by commas.",
     "sort": "Sort Order",
     "isAdmin": "Is Admin"
+  },
+  "job": {
+    "title": "Job Management"
+  },
+  "dict": {
+    "title": "Dictionary Management"
+  },
+  "log": {
+    "title": "Operation Log"
   }
 }

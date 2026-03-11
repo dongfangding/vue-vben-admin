@@ -54,6 +54,18 @@ async function updateRole(
 }
 
 /**
+ * 单独更新角色授权
+ * @param roleId 角色 ID
+ * @param menuIds 菜单 ID 集合
+ */
+async function updateRoleMenu(roleId: number, menuIds: Array<number | string>) {
+  return requestClient.post('sys-role/update-role-menu', {
+    roleId,
+    menuIds,
+  });
+}
+
+/**
  * 更新状态
  * @param roleId 角色 ID
  */
@@ -69,4 +81,11 @@ async function deleteRole(roleId: number) {
   return requestClient.post('sys-role/delete', { id: roleId });
 }
 
-export { createRole, deleteRole, getRoleList, updateRole, updateRoleEnable };
+export {
+  createRole,
+  deleteRole,
+  getRoleList,
+  updateRole,
+  updateRoleEnable,
+  updateRoleMenu,
+};

@@ -18,9 +18,15 @@ import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
+import MenuDrawer from './modules/menu-drawer.vue';
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+const [RoleMenuDrawer, roleMenuDrawerApi] = useVbenDrawer({
+  connectedComponent: MenuDrawer,
   destroyOnClose: true,
 });
 
@@ -46,9 +52,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
     rowConfig: {
-      keyField: 'id',
+      keyField: 'roleId',
     },
-
     toolbarConfig: {
       custom: true,
       export: false,
@@ -61,6 +66,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRole>) {
   switch (e.code) {
+    case 'authorize': {
+      onAuthorize(e.row);
+      break;
+    }
     case 'delete': {
       onDelete(e.row);
       break;
@@ -72,44 +81,33 @@ function onActionClick(e: OnActionClickParams<SystemRoleApi.SystemRole>) {
   }
 }
 
-/**
- * 将Antd的Modal.confirm封装为promise，方便在异步函数中调用。
- * @param content 提示内容
- * @param title 提示标题
- */
 function confirm(content: string, title: string) {
-  return new Promise((reslove, reject) => {
+  return new Promise((resolve, reject) => {
     Modal.confirm({
       content,
       onCancel() {
-        reject(new Error('已取消'));
+        reject(new Error('cancel'));
       },
       onOk() {
-        reslove(true);
+        resolve(true);
       },
       title,
     });
   });
 }
 
-/**
- * 状态开关即将改变
- * @param newStatus 期望改变的状态值
- * @param row 行数据
- * @returns 返回false则中止改变，返回其他值（undefined、true）则允许改变
- */
 async function onStatusChange(
   newStatus: boolean,
   row: SystemRoleApi.SystemRole,
 ) {
   const status: Recordable<string> = {
-    0: '禁用',
-    1: '启用',
+    false: '禁用',
+    true: '启用',
   };
   try {
     await confirm(
-      `你要将${row.name}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
-      `切换状态`,
+      `确认将 ${row.name} 的状态切换为“${status[String(newStatus)]}”吗？`,
+      '切换状态',
     );
     await updateRoleEnable(row.roleId, newStatus);
     return true;
@@ -120,6 +118,10 @@ async function onStatusChange(
 
 function onEdit(row: SystemRoleApi.SystemRole) {
   formDrawerApi.setData(row).open();
+}
+
+function onAuthorize(row: SystemRoleApi.SystemRole) {
+  roleMenuDrawerApi.setData(row).open();
 }
 
 function onDelete(row: SystemRoleApi.SystemRole) {
@@ -149,9 +151,11 @@ function onCreate() {
   formDrawerApi.setData({}).open();
 }
 </script>
+
 <template>
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
+    <RoleMenuDrawer @success="onRefresh" />
     <Grid :table-title="$t('system.role.list')">
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">

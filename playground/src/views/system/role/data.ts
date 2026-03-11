@@ -34,20 +34,6 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'sort',
       label: $t('system.role.sort'),
     },
-    // {
-    //   component: 'Input',
-    //   fieldName: 'permissions',
-    //   formItemClass: 'items-start',
-    //   label: $t('system.role.setPermissions'),
-    //   modelPropName: 'modelValue',
-    // },
-    {
-      component: 'Input',
-      fieldName: 'menuIds',
-      formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
-      modelPropName: 'modelValue',
-    },
   ];
 }
 
@@ -141,11 +127,19 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
           onClick: onActionClick,
         },
         name: 'CellOperation',
+        options: [
+          {
+            code: 'authorize',
+            text: $t('system.role.setPermissions'),
+          },
+          'edit',
+          'delete',
+        ],
       },
       field: 'operation',
       fixed: 'right',
       title: $t('system.role.operation'),
-      width: 130,
+      width: 220,
     },
   ];
 }

@@ -15,7 +15,7 @@ const tabsValue = ref<string>('basic');
 
 const tabs = ref([
   {
-    label: '基本设置',
+    label: '基本资料',
     value: 'basic',
   },
   {
@@ -27,11 +27,12 @@ const tabs = ref([
     value: 'password',
   },
   {
-    label: '新消息提醒',
+    label: '通知设置',
     value: 'notice',
   },
 ]);
 </script>
+
 <template>
   <Profile
     v-model:model-value="tabsValue"
