@@ -7,6 +7,7 @@ import type { SystemDeptApi, SystemUserApi } from '#/api';
 
 import { computed, onMounted, ref, watch } from 'vue';
 
+import { useAccess } from '@vben/access';
 import { Page, Tree, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -25,6 +26,13 @@ import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
 
+const { hasAccessByCodes } = useAccess();
+const canCreateUser = hasAccessByCodes(['user:add']);
+const canEditUser = hasAccessByCodes(['user:edit']);
+const canDeleteUser = hasAccessByCodes(['user:del']);
+const canResetPassword = hasAccessByCodes(['user:reset-password']);
+const canUpdateUserStatus = hasAccessByCodes(['user:edit']);
+
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
   destroyOnClose: true,
@@ -40,7 +48,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
     submitOnChange: true,
   },
   gridOptions: {
-    columns: useColumns(onActionClick, onStatusChange),
+    columns: useColumns(
+      onActionClick,
+      canUpdateUserStatus ? onStatusChange : undefined,
+      {
+        delete: canDeleteUser,
+        edit: canEditUser,
+        resetPassword: canResetPassword,
+      },
+    ),
     height: 'auto',
     keepSource: true,
     pagerConfig: {},
@@ -133,14 +149,24 @@ function onActionClick(e: OnActionClickParams<SystemUserApi.SystemUser>) {
 }
 
 function onCreate() {
+  if (!canCreateUser) {
+    return;
+  }
   formDrawerApi.setData({}).open();
 }
 
 function onEdit(row: SystemUserApi.SystemUser) {
+  if (!canEditUser) {
+    return;
+  }
   formDrawerApi.setData(row).open();
 }
 
 function onDelete(row: SystemUserApi.SystemUser) {
+  if (!canDeleteUser) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.username]),
     duration: 0,
@@ -177,14 +203,18 @@ async function onStatusChange(
 }
 
 function onResetPassword(row: SystemUserApi.SystemUser) {
+  if (!canResetPassword) {
+    return;
+  }
+
   Modal.confirm({
-    content: `\u786E\u8BA4\u91CD\u7F6E\u7528\u6237 ${row.username} \u7684\u5BC6\u7801\u5417\uFF1F`,
-    okText: '\u786E\u8BA4',
-    cancelText: '\u53D6\u6D88',
-    title: '\u91CD\u7F6E\u5BC6\u7801',
+    content: `确认重置用户 ${row.username} 的密码吗？`,
+    okText: '确认',
+    cancelText: '取消',
+    title: '重置密码',
     async onOk() {
       const hideLoading = message.loading({
-        content: `\u6B63\u5728\u91CD\u7F6E ${row.username} \u7684\u5BC6\u7801...`,
+        content: `正在重置 ${row.username} 的密码...`,
         duration: 0,
         key: 'action_process_msg',
       });
@@ -192,7 +222,7 @@ function onResetPassword(row: SystemUserApi.SystemUser) {
       try {
         await resetUserPassword(row.userId);
         message.success({
-          content: `${row.username} \u5BC6\u7801\u5DF2\u91CD\u7F6E`,
+          content: `${row.username} 密码已重置`,
           key: 'action_process_msg',
         });
       } catch {
@@ -250,7 +280,7 @@ function onResetDeptFilter() {
       <div class="min-h-0 min-w-0 overflow-hidden">
         <Grid class="h-full min-h-0" :table-title="tableTitle">
           <template #toolbar-tools>
-            <Button type="primary" @click="onCreate">
+            <Button v-if="canCreateUser" type="primary" @click="onCreate">
               <Plus class="size-5" />
               {{ $t('ui.actionTitle.create', [$t('system.user.name')]) }}
             </Button>

@@ -5,6 +5,7 @@ import type {
 } from '#/adapter/vxe-table';
 import type { SystemJobApi } from '#/api';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -15,6 +16,11 @@ import { deleteJob, getJobList } from '#/api';
 
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
+
+const { hasAccessByCodes } = useAccess();
+const canCreateJob = hasAccessByCodes(['job:add']);
+const canEditJob = hasAccessByCodes(['job:add']);
+const canDeleteJob = hasAccessByCodes(['job:del']);
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
@@ -27,7 +33,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     submitOnChange: true,
   },
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(onActionClick, {
+      delete: canDeleteJob,
+      edit: canEditJob,
+    }),
     height: 'auto',
     keepSource: true,
     proxyConfig: {
@@ -54,9 +63,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<SystemJobApi.SystemJob>,
 });
 
-function onActionClick({ code, row }: OnActionClickParams<SystemJobApi.SystemJob>) {
+function onActionClick({
+  code,
+  row,
+}: OnActionClickParams<SystemJobApi.SystemJob>) {
   switch (code) {
     case 'edit': {
+      if (!canEditJob) {
+        return;
+      }
       formDrawerApi.setData(row).open();
       break;
     }
@@ -68,6 +83,9 @@ function onActionClick({ code, row }: OnActionClickParams<SystemJobApi.SystemJob
 }
 
 function onCreate() {
+  if (!canCreateJob) {
+    return;
+  }
   formDrawerApi.setData({}).open();
 }
 
@@ -76,6 +94,10 @@ function onRefresh() {
 }
 
 async function onDelete(row: SystemJobApi.SystemJob) {
+  if (!canDeleteJob) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: `正在删除岗位 ${row.name}...`,
     duration: 0,
@@ -100,7 +122,7 @@ async function onDelete(row: SystemJobApi.SystemJob) {
     <FormDrawer @success="onRefresh" />
     <Grid table-title="岗位列表">
       <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
+        <Button v-if="canCreateJob" type="primary" @click="onCreate">
           <Plus class="size-5" />
           新增岗位
         </Button>

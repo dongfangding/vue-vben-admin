@@ -5,6 +5,7 @@ import type {
 } from '#/adapter/vxe-table';
 import type { SystemDeptApi } from '#/api/system/dept';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenModal } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -17,39 +18,42 @@ import { $t } from '#/locales';
 import { useColumns } from './data';
 import Form from './modules/form.vue';
 
+const { hasAccessByCodes } = useAccess();
+const canCreateDept = hasAccessByCodes(['dept:add']);
+const canEditDept = hasAccessByCodes(['dept:edit']);
+const canDeleteDept = hasAccessByCodes(['dept:del']);
+
 const [FormModal, formModalApi] = useVbenModal({
   connectedComponent: Form,
   destroyOnClose: true,
 });
 
-/**
- * 编辑部门
- * @param row
- */
 function onEdit(row: SystemDeptApi.SystemDept) {
+  if (!canEditDept) {
+    return;
+  }
   formModalApi.setData(row).open();
 }
 
-/**
- * 添加下级部门
- * @param row
- */
 function onAppend(row: SystemDeptApi.SystemDept) {
-  formModalApi.setData({ pid: row.id }).open();
+  if (!canCreateDept) {
+    return;
+  }
+  formModalApi.setData({ pid: row.deptId }).open();
 }
 
-/**
- * 创建新部门
- */
 function onCreate() {
+  if (!canCreateDept) {
+    return;
+  }
   formModalApi.setData(null).open();
 }
 
-/**
- * 删除部门
- * @param row
- */
 function onDelete(row: SystemDeptApi.SystemDept) {
+  if (!canDeleteDept) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,
@@ -68,9 +72,6 @@ function onDelete(row: SystemDeptApi.SystemDept) {
     });
 }
 
-/**
- * 表格操作按钮的回调函数
- */
 function onActionClick({
   code,
   row,
@@ -94,7 +95,11 @@ function onActionClick({
 const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {},
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(onActionClick, {
+      append: canCreateDept,
+      delete: canDeleteDept,
+      edit: canEditDept,
+    }),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -102,7 +107,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async (_params) => {
+        query: async () => {
           return await getDeptList();
         },
       },
@@ -115,25 +120,23 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     treeConfig: {
       parentField: 'pid',
-      rowField: 'id',
+      rowField: 'deptId',
       transform: false,
     },
   } as VxeTableGridOptions,
 });
 
-/**
- * 刷新表格
- */
 function refreshGrid() {
   gridApi.query();
 }
 </script>
+
 <template>
   <Page auto-content-height>
     <FormModal @success="refreshGrid" />
-    <Grid table-title="部门列表">
+    <Grid :table-title="$t('system.dept.list')">
       <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
+        <Button v-if="canCreateDept" type="primary" @click="onCreate">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('system.dept.name')]) }}
         </Button>

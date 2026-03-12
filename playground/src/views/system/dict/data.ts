@@ -6,14 +6,20 @@ export function useDictGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
-      label: '字典名称',
+      fieldName: 'keyword',
+      label: '关键字',
     },
   ];
 }
 
 export function useDictFormSchema(): VbenFormSchema[] {
   return [
+    {
+      component: 'Input',
+      fieldName: 'dictCode',
+      label: '字典编码',
+      rules: 'required',
+    },
     {
       component: 'Input',
       fieldName: 'name',
@@ -32,19 +38,20 @@ export function useDictDetailGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'label',
-      label: '标签',
-    },
-    {
-      component: 'Input',
-      fieldName: 'value',
-      label: '值',
+      fieldName: 'keyword',
+      label: '关键字',
     },
   ];
 }
 
 export function useDictDetailFormSchema(): VbenFormSchema[] {
   return [
+    {
+      component: 'Input',
+      fieldName: 'detailCode',
+      label: '明细编码',
+      rules: 'required',
+    },
     {
       component: 'Input',
       fieldName: 'label',
@@ -69,12 +76,22 @@ export function useDictDetailFormSchema(): VbenFormSchema[] {
 
 export function useDictColumns(
   onActionClick: OnActionClickFn<SystemDictApi.SystemDict>,
+  actionVisible?: {
+    delete?: boolean;
+    details?: boolean;
+    edit?: boolean;
+  },
 ): VxeTableGridOptions<SystemDictApi.SystemDict>['columns'] {
   return [
     {
       field: 'dictId',
       title: '字典ID',
       width: 100,
+    },
+    {
+      field: 'dictCode',
+      title: '字典编码',
+      minWidth: 160,
     },
     {
       field: 'name',
@@ -97,7 +114,7 @@ export function useDictColumns(
       field: 'operation',
       fixed: 'right',
       title: '操作',
-      width: 210,
+      width: 180,
       cellRender: {
         name: 'CellOperation',
         attrs: {
@@ -107,11 +124,13 @@ export function useDictColumns(
         },
         options: [
           {
-            code: 'details',
-            text: '明细',
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
           },
-          'edit',
-          'delete',
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
         ],
       },
     },
@@ -120,12 +139,21 @@ export function useDictColumns(
 
 export function useDictDetailColumns(
   onActionClick: OnActionClickFn<SystemDictApi.SystemDictDetail>,
+  actionVisible?: {
+    delete?: boolean;
+    edit?: boolean;
+  },
 ): VxeTableGridOptions<SystemDictApi.SystemDictDetail>['columns'] {
   return [
     {
       field: 'detailId',
       title: '明细ID',
       width: 100,
+    },
+    {
+      field: 'detailCode',
+      title: '明细编码',
+      minWidth: 160,
     },
     {
       field: 'label',
@@ -161,6 +189,16 @@ export function useDictDetailColumns(
           nameTitle: '字典明细',
           onClick: onActionClick,
         },
+        options: [
+          {
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
+          },
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
+        ],
       },
     },
   ];

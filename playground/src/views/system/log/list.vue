@@ -2,6 +2,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemLogApi } from '#/api';
 
+import { useAccess } from '@vben/access';
 import { Page } from '@vben/common-ui';
 
 import { Button, message } from 'ant-design-vue';
@@ -10,6 +11,9 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { deleteLogs, getLogList } from '#/api';
 
 import { useColumns, useGridFormSchema } from './data';
+
+const { hasAccessByCodes } = useAccess();
+const canDeleteLogs = hasAccessByCodes(['log:del']);
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -53,7 +57,12 @@ function onRefresh() {
 }
 
 async function onBatchDelete() {
-  const rows = (gridApi.grid?.getCheckboxRecords?.() ?? []) as SystemLogApi.SystemLog[];
+  if (!canDeleteLogs) {
+    return;
+  }
+
+  const rows = (gridApi.grid?.getCheckboxRecords?.() ??
+    []) as SystemLogApi.SystemLog[];
   const ids = rows.map((item) => item.logId).filter(Boolean);
   if (ids.length === 0) {
     message.warning('请先选择要删除的日志');
@@ -83,7 +92,7 @@ async function onBatchDelete() {
   <Page auto-content-height>
     <Grid table-title="操作日志">
       <template #toolbar-tools>
-        <Button danger @click="onBatchDelete">
+        <Button v-if="canDeleteLogs" danger @click="onBatchDelete">
           批量删除
         </Button>
       </template>

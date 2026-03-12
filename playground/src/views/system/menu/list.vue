@@ -4,6 +4,7 @@ import type {
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
 import { $t } from '@vben/locales';
@@ -18,6 +19,11 @@ import { deleteMenu, getMenuList, SystemMenuApi } from '#/api/system/menu';
 import { useColumns } from './data';
 import Form from './modules/form.vue';
 
+const { hasAccessByCodes } = useAccess();
+const canCreateMenu = hasAccessByCodes(['menu:add']);
+const canEditMenu = hasAccessByCodes(['menu:edit']);
+const canDeleteMenu = hasAccessByCodes(['menu:del']);
+
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
   destroyOnClose: true,
@@ -25,7 +31,11 @@ const [FormDrawer, formDrawerApi] = useVbenDrawer({
 
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(onActionClick, {
+      append: canCreateMenu,
+      delete: canDeleteMenu,
+      edit: canEditMenu,
+    }),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -33,7 +43,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async (_params) => {
+        query: async () => {
           return await getMenuList();
         },
       },
@@ -72,26 +82,39 @@ function onActionClick({
       onEdit(row);
       break;
     }
-    default: {
-      break;
-    }
   }
 }
 
 function onRefresh() {
   gridApi.query();
 }
+
 function onEdit(row: SystemMenuApi.SystemMenu) {
+  if (!canEditMenu) {
+    return;
+  }
   formDrawerApi.setData(row).open();
 }
+
 function onCreate() {
+  if (!canCreateMenu) {
+    return;
+  }
   formDrawerApi.setData({}).open();
 }
+
 function onAppend(row: SystemMenuApi.SystemMenu) {
+  if (!canCreateMenu) {
+    return;
+  }
   formDrawerApi.setData({ pid: row.menuId }).open();
 }
 
 function onDelete(row: SystemMenuApi.SystemMenu) {
+  if (!canDeleteMenu) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,
@@ -110,12 +133,13 @@ function onDelete(row: SystemMenuApi.SystemMenu) {
     });
 }
 </script>
+
 <template>
   <Page auto-content-height>
     <FormDrawer @success="onRefresh" />
     <Grid>
       <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
+        <Button v-if="canCreateMenu" type="primary" @click="onCreate">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('system.menu.name')]) }}
         </Button>
@@ -148,6 +172,7 @@ function onDelete(row: SystemMenuApi.SystemMenu) {
     </Grid>
   </Page>
 </template>
+
 <style lang="scss" scoped>
 .menu-badge {
   top: 50%;

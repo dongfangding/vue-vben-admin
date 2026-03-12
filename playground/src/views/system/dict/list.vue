@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import type {
   OnActionClickParams,
+  VxeGridListeners,
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 import type { SystemDictApi } from '#/api';
 
 import { computed, ref } from 'vue';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -29,6 +31,16 @@ import {
 import DictDetailForm from './modules/dict-detail-form.vue';
 import DictForm from './modules/dict-form.vue';
 
+const { hasAccessByCodes } = useAccess();
+const canCreateDict = hasAccessByCodes(['dict:add']);
+const canEditDict = hasAccessByCodes(['dict:edit']);
+const canDeleteDict = hasAccessByCodes(['dict:del']);
+const canCreateDictDetail = hasAccessByCodes(['dict-detail:add']);
+const canEditDictDetail = hasAccessByCodes(['dict-detail:edit']);
+const canDeleteDictDetail = hasAccessByCodes(['dict-detail:del']);
+const canViewDictDetail =
+  canCreateDictDetail || canEditDictDetail || canDeleteDictDetail;
+
 const currentDict = ref<null | SystemDictApi.SystemDict>(null);
 
 const [DictFormDrawer, dictFormDrawerApi] = useVbenDrawer({
@@ -41,13 +53,39 @@ const [DictDetailFormDrawer, dictDetailFormDrawerApi] = useVbenDrawer({
   destroyOnClose: true,
 });
 
+function selectDict(row: SystemDictApi.SystemDict) {
+  if (!canViewDictDetail || !row.dictId) {
+    return;
+  }
+
+  if (currentDict.value?.dictId === row.dictId) {
+    return;
+  }
+
+  currentDict.value = row;
+  onRefreshDetail();
+}
+
+const dictGridEvents: VxeGridListeners<SystemDictApi.SystemDict> = {
+  cellClick: ({ column, row }) => {
+    if (column.field === 'operation') {
+      return;
+    }
+    selectDict(row);
+  },
+};
+
 const [DictGrid, dictGridApi] = useVbenVxeGrid({
   formOptions: {
     schema: useDictGridFormSchema(),
     submitOnChange: true,
   },
+  gridEvents: dictGridEvents,
   gridOptions: {
-    columns: useDictColumns(onDictActionClick),
+    columns: useDictColumns(onDictActionClick, {
+      delete: canDeleteDict,
+      edit: canEditDict,
+    }),
     height: 'auto',
     keepSource: true,
     proxyConfig: {
@@ -81,7 +119,10 @@ const [DetailGrid, detailGridApi] = useVbenVxeGrid({
     submitOnChange: true,
   },
   gridOptions: {
-    columns: useDictDetailColumns(onDetailActionClick),
+    columns: useDictDetailColumns(onDetailActionClick, {
+      delete: canDeleteDictDetail,
+      edit: canEditDictDetail,
+    }),
     height: 'auto',
     keepSource: true,
     proxyConfig: {
@@ -117,16 +158,21 @@ const [DetailGrid, detailGridApi] = useVbenVxeGrid({
 });
 
 const detailTitle = computed(() =>
-  currentDict.value?.name
-    ? `${currentDict.value.name} / 字典明细`
-    : '字典明细',
+  currentDict.value?.name ? `${currentDict.value.name} / 字典明细` : '字典明细',
 );
 
 function onCreateDict() {
+  if (!canCreateDict) {
+    return;
+  }
   dictFormDrawerApi.setData({}).open();
 }
 
 function onCreateDetail() {
+  if (!canCreateDictDetail) {
+    return;
+  }
+
   if (!currentDict.value?.dictId) {
     message.warning('请先选择左侧字典');
     return;
@@ -134,6 +180,7 @@ function onCreateDetail() {
 
   dictDetailFormDrawerApi
     .setData({
+      dictCode: currentDict.value.dictCode,
       dictId: currentDict.value.dictId,
       dictSort: 0,
     })
@@ -153,12 +200,10 @@ function onDictActionClick({
   row,
 }: OnActionClickParams<SystemDictApi.SystemDict>) {
   switch (code) {
-    case 'details': {
-      currentDict.value = row;
-      onRefreshDetail();
-      break;
-    }
     case 'edit': {
+      if (!canEditDict) {
+        return;
+      }
       dictFormDrawerApi.setData(row).open();
       break;
     }
@@ -175,6 +220,9 @@ function onDetailActionClick({
 }: OnActionClickParams<SystemDictApi.SystemDictDetail>) {
   switch (code) {
     case 'edit': {
+      if (!canEditDictDetail) {
+        return;
+      }
       dictDetailFormDrawerApi.setData(row).open();
       break;
     }
@@ -186,6 +234,10 @@ function onDetailActionClick({
 }
 
 async function onDeleteDict(row: SystemDictApi.SystemDict) {
+  if (!canDeleteDict) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: `正在删除字典 ${row.name}...`,
     duration: 0,
@@ -209,6 +261,10 @@ async function onDeleteDict(row: SystemDictApi.SystemDict) {
 }
 
 async function onDeleteDetail(row: SystemDictApi.SystemDictDetail) {
+  if (!canDeleteDictDetail) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: `正在删除字典明细 ${row.label}...`,
     duration: 0,
@@ -241,7 +297,7 @@ async function onDeleteDetail(row: SystemDictApi.SystemDictDetail) {
       <div class="min-h-0 min-w-0 overflow-hidden">
         <DictGrid class="h-full min-h-0" table-title="字典列表">
           <template #toolbar-tools>
-            <Button type="primary" @click="onCreateDict">
+            <Button v-if="canCreateDict" type="primary" @click="onCreateDict">
               <Plus class="size-5" />
               新增字典
             </Button>
@@ -257,7 +313,11 @@ async function onDeleteDetail(row: SystemDictApi.SystemDictDetail) {
       >
         <div v-if="currentDict?.dictId" class="flex h-full min-h-0 flex-col">
           <div class="flex items-center justify-end border-b px-4 py-3">
-            <Button type="primary" @click="onCreateDetail">
+            <Button
+              v-if="canCreateDictDetail"
+              type="primary"
+              @click="onCreateDetail"
+            >
               <Plus class="size-5" />
               新增明细
             </Button>

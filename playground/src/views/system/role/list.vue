@@ -7,6 +7,7 @@ import type {
 } from '#/adapter/vxe-table';
 import type { SystemRoleApi } from '#/api';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -19,6 +20,13 @@ import { $t } from '#/locales';
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
 import MenuDrawer from './modules/menu-drawer.vue';
+
+const { hasAccessByCodes } = useAccess();
+const canCreateRole = hasAccessByCodes(['roles:add']);
+const canAuthorizeRole = hasAccessByCodes(['roles:edit']);
+const canEditRole = hasAccessByCodes(['roles:edit']);
+const canDeleteRole = hasAccessByCodes(['roles:del']);
+const canUpdateRoleStatus = hasAccessByCodes(['roles:persist']);
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
@@ -37,7 +45,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
     submitOnChange: true,
   },
   gridOptions: {
-    columns: useColumns(onActionClick, onStatusChange),
+    columns: useColumns(
+      onActionClick,
+      canUpdateRoleStatus ? onStatusChange : undefined,
+      {
+      authorize: canAuthorizeRole,
+      delete: canDeleteRole,
+      edit: canEditRole,
+      },
+    ),
     height: 'auto',
     keepSource: true,
     proxyConfig: {
@@ -117,14 +133,24 @@ async function onStatusChange(
 }
 
 function onEdit(row: SystemRoleApi.SystemRole) {
+  if (!canEditRole) {
+    return;
+  }
   formDrawerApi.setData(row).open();
 }
 
 function onAuthorize(row: SystemRoleApi.SystemRole) {
+  if (!canAuthorizeRole) {
+    return;
+  }
   roleMenuDrawerApi.setData(row).open();
 }
 
 function onDelete(row: SystemRoleApi.SystemRole) {
+  if (!canDeleteRole) {
+    return;
+  }
+
   const hideLoading = message.loading({
     content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,
@@ -148,6 +174,9 @@ function onRefresh() {
 }
 
 function onCreate() {
+  if (!canCreateRole) {
+    return;
+  }
   formDrawerApi.setData({}).open();
 }
 </script>
@@ -158,7 +187,7 @@ function onCreate() {
     <RoleMenuDrawer @success="onRefresh" />
     <Grid :table-title="$t('system.role.list')">
       <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
+        <Button v-if="canCreateRole" type="primary" @click="onCreate">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('system.role.name')]) }}
         </Button>

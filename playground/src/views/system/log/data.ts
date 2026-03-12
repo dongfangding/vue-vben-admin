@@ -16,8 +16,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
-      fieldName: 'method',
-      label: '方法名',
+      fieldName: 'description',
+      label: '操作说明',
     },
     {
       component: 'RangePicker',
@@ -30,14 +30,14 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useColumns(): VxeTableGridOptions<SystemLogApi.SystemLog>['columns'] {
   return [
     {
+      align: 'center',
       type: 'checkbox',
       width: 60,
-      align: 'center',
     },
     {
+      title: '#',
       type: 'seq',
       width: 60,
-      title: '#',
     },
     {
       field: 'username',
@@ -48,6 +48,21 @@ export function useColumns(): VxeTableGridOptions<SystemLogApi.SystemLog>['colum
       field: 'logType',
       title: '日志类型',
       width: 140,
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          {
+            color: 'success',
+            label: 'SUCCESS',
+            value: 'SUCCESS',
+          },
+          {
+            color: 'error',
+            label: 'FAIL',
+            value: 'FAIL',
+          },
+        ],
+      },
     },
     {
       field: 'description',
@@ -55,14 +70,14 @@ export function useColumns(): VxeTableGridOptions<SystemLogApi.SystemLog>['colum
       minWidth: 200,
     },
     {
-      field: 'method',
-      title: '方法签名',
-      minWidth: 220,
-    },
-    {
       field: 'requestIp',
       title: '请求IP',
       width: 140,
+    },
+    {
+      field: 'address',
+      title: '地址',
+      minWidth: 220,
     },
     {
       field: 'browser',

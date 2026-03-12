@@ -73,6 +73,11 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useColumns<T = SystemRoleApi.SystemRole>(
   onActionClick: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
+  actionVisible?: {
+    authorize?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  },
 ): VxeTableGridOptions['columns'] {
   return [
     {
@@ -130,10 +135,17 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
         options: [
           {
             code: 'authorize',
+            show: actionVisible?.authorize ?? true,
             text: $t('system.role.setPermissions'),
           },
-          'edit',
-          'delete',
+          {
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
+          },
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
         ],
       },
       field: 'operation',

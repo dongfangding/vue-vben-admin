@@ -7,6 +7,8 @@ export namespace SystemDictApi {
     createBy?: string;
     createTime?: number | string;
     description?: string;
+    /** 字典代码 */
+    dictCode?: string;
     dictId?: number;
     name: string;
     updateBy?: string;
@@ -16,7 +18,11 @@ export namespace SystemDictApi {
   export interface SystemDictDetail {
     createBy?: string;
     createTime?: number | string;
+    /** 字典明细编码 */
+    detailCode?: string;
     detailId?: number;
+    /** 字典代码 */
+    dictCode?: string;
     dictId: number;
     dictSort: number;
     label: string;
@@ -77,5 +83,7 @@ export async function persistDictDetail(data: SystemDictApi.SystemDictDetail) {
  * 删除字典明细
  */
 export async function deleteDictDetail(detailId: number) {
-  return requestClient.post<boolean>('/sys-dict-detail/delete', { id: detailId });
+  return requestClient.post<boolean>('/sys-dict-detail/delete', {
+    id: detailId,
+  });
 }

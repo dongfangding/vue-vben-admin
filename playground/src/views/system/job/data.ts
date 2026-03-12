@@ -59,6 +59,10 @@ export function useFormSchema(): VbenFormSchema[] {
 
 export function useColumns(
   onActionClick: OnActionClickFn<SystemJobApi.SystemJob>,
+  actionVisible?: {
+    delete?: boolean;
+    edit?: boolean;
+  },
 ): VxeTableGridOptions<SystemJobApi.SystemJob>['columns'] {
   return [
     {
@@ -111,6 +115,16 @@ export function useColumns(
           nameTitle: '岗位',
           onClick: onActionClick,
         },
+        options: [
+          {
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
+          },
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
+        ],
       },
     },
   ];

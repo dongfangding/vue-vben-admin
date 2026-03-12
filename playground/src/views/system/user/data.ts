@@ -62,6 +62,11 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useColumns<T = SystemUserApi.SystemUser>(
   onActionClick: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
+  actionVisible?: {
+    delete?: boolean;
+    edit?: boolean;
+    resetPassword?: boolean;
+  },
 ): VxeTableGridOptions['columns'] {
   return [
     {
@@ -154,10 +159,17 @@ export function useColumns<T = SystemUserApi.SystemUser>(
         options: [
           {
             code: 'reset-password',
+            show: actionVisible?.resetPassword ?? true,
             text: '\u91CD\u7F6E\u5BC6\u7801',
           },
-          'edit',
-          'delete',
+          {
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
+          },
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
         ],
       },
       field: 'operation',
