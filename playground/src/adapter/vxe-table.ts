@@ -16,6 +16,7 @@ import { get, isFunction, isString } from '@vben/utils';
 import { objectOmit } from '@vueuse/core';
 import { Button, Image, Popconfirm, Switch, Tag } from 'ant-design-vue';
 
+import { DictTag, DictText } from '#/components/dict';
 import { $t } from '#/locales';
 
 import { useVbenForm } from './form';
@@ -98,6 +99,31 @@ setupVbenVxeTable({
           },
           { default: () => tagItem?.label ?? value },
         );
+      },
+    });
+
+    vxeUI.renderer.add('CellDictText', {
+      renderTableDefault({ props }, { column, row }) {
+        return [
+          h(DictText, {
+            dictCode: props?.dictCode,
+            matchField: props?.matchField,
+            value: row[column.field],
+          }),
+        ];
+      },
+    });
+
+    vxeUI.renderer.add('CellDictTag', {
+      renderTableDefault({ props }, { column, row }) {
+        return [
+          h(DictTag, {
+            color: props?.color,
+            dictCode: props?.dictCode,
+            matchField: props?.matchField,
+            value: row[column.field],
+          }),
+        ];
       },
     });
 

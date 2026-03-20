@@ -28,6 +28,7 @@ import {
   useDictDetailGridFormSchema,
   useDictGridFormSchema,
 } from './data';
+import { refreshDictCacheOnSuccess } from './cache';
 import DictDetailForm from './modules/dict-detail-form.vue';
 import DictForm from './modules/dict-form.vue';
 
@@ -187,11 +188,13 @@ function onCreateDetail() {
     .open();
 }
 
-function onRefreshDict() {
+async function onRefreshDict(payload?: { dictCode?: string }) {
+  await refreshDictCacheOnSuccess(payload?.dictCode);
   dictGridApi.query();
 }
 
-function onRefreshDetail() {
+async function onRefreshDetail(payload?: { dictCode?: string }) {
+  await refreshDictCacheOnSuccess(payload?.dictCode);
   detailGridApi.query();
 }
 

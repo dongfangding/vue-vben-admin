@@ -39,6 +39,8 @@ import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'ant-design-vue';
 
+import { DictSelect } from '#/components/dict';
+
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
 );
@@ -494,6 +496,7 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
+  | 'DictSelect'
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -550,6 +553,7 @@ async function initComponentAdapter() {
       return h(Button, { ...props, attrs, type: 'default' }, slots);
     },
     Divider,
+    DictSelect: withDefaultPlaceholder(DictSelect, 'select'),
     IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
       iconSlot: 'addonAfter',
       inputComponent: Input,

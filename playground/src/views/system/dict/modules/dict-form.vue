@@ -11,7 +11,7 @@ import { persistDict } from '#/api';
 import { useDictFormSchema } from '../data';
 
 const emit = defineEmits<{
-  success: [];
+  success: [payload: { dictCode?: string }];
 }>();
 
 const formData = ref<SystemDictApi.SystemDict>();
@@ -37,7 +37,9 @@ const [Drawer, drawerApi] = useVbenDrawer({
         ...values,
       });
       drawerApi.close();
-      emit('success');
+      emit('success', {
+        dictCode: values.dictCode || formData.value?.dictCode,
+      });
     } finally {
       drawerApi.unlock();
     }
