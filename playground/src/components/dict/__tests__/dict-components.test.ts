@@ -90,4 +90,20 @@ describe('dict components', () => {
       },
     ]);
   });
+
+  it('supports value/update:value contract used by form adapter', async () => {
+    const wrapper = mount(DictSelect, {
+      props: {
+        dictCode: 'enabled',
+        value: 'enabled',
+      },
+    });
+
+    await flushPromises();
+
+    await wrapper.findComponent({ name: 'ASelect' }).vm.$emit('update:value', 'disabled');
+
+    expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['disabled']);
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['disabled']);
+  });
 });
