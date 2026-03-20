@@ -52,3 +52,4 @@ vite.config.ts.*
 .cursor
 ### claude code /cursor ,避免层级过深，忽略一些团队的规范定义
 .claude/settings.local.json
+.worktrees/
