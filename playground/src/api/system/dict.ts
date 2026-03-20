@@ -87,3 +87,16 @@ export async function deleteDictDetail(detailId: number) {
     id: detailId,
   });
 }
+
+/**
+ * 按字典编码获取全部字典明细，供前端字典基础设施复用。
+ */
+export async function fetchDictOptionsByCode(dictCode: string) {
+  const result = await getDictDetailList({
+    dictCode,
+    pageNum: 1,
+    pageSize: 999,
+  });
+
+  return result?.content || result?.list || [];
+}
