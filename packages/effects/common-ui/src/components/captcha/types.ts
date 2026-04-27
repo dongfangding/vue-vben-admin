@@ -4,51 +4,53 @@ import type { ClassType } from '@vben/types';
 
 export interface CaptchaData {
   /**
-   * x
+   * X coordinate.
    */
   x: number;
   /**
-   * y
+   * Y coordinate.
    */
   y: number;
   /**
-   * 时间戳
+   * Click timestamp.
    */
   t: number;
 }
+
 export interface CaptchaPoint extends CaptchaData {
   /**
-   * 数据索引
+   * Point index.
    */
   i: number;
 }
+
 export interface PointSelectionCaptchaCardProps {
   /**
-   * 验证码图片
+   * Captcha image source.
    */
   captchaImage: string;
   /**
-   * 验证码图片高度
+   * Captcha image height.
    * @default '220px'
    */
   height?: number | string;
   /**
-   * 水平内边距
+   * Horizontal padding.
    * @default '12px'
    */
   paddingX?: number | string;
   /**
-   * 垂直内边距
+   * Vertical padding.
    * @default '16px'
    */
   paddingY?: number | string;
   /**
-   * 标题
-   * @default '请按图依次点击'
+   * Captcha title.
+   * @default '?????'
    */
   title?: string;
   /**
-   * 验证码图片宽度
+   * Captcha image width.
    * @default '300px'
    */
   width?: number | string;
@@ -56,17 +58,21 @@ export interface PointSelectionCaptchaCardProps {
 
 export interface PointSelectionCaptchaProps extends PointSelectionCaptchaCardProps {
   /**
-   * 是否展示确定按钮
+   * Auto trigger confirm after the given click count.
+   */
+  autoConfirmCount?: number;
+  /**
+   * Whether to show the confirm button.
    * @default false
    */
   showConfirm?: boolean;
   /**
-   * 提示图片
+   * Hint image.
    * @default ''
    */
   hintImage?: string;
   /**
-   * 提示文本
+   * Hint text.
    * @default ''
    */
   hintText?: string;
@@ -75,121 +81,121 @@ export interface PointSelectionCaptchaProps extends PointSelectionCaptchaCardPro
 export interface SliderCaptchaProps {
   class?: ClassType;
   /**
-   * @description 滑块的样式
+   * @description Slider action style.
    * @default {}
    */
   actionStyle?: CSSProperties;
 
   /**
-   * @description 滑块条的样式
+   * @description Slider bar style.
    * @default {}
    */
   barStyle?: CSSProperties;
 
   /**
-   * @description 内容的样式
+   * @description Content style.
    * @default {}
    */
   contentStyle?: CSSProperties;
 
   /**
-   * @description 组件的样式
+   * @description Wrapper style.
    * @default {}
    */
   wrapperStyle?: CSSProperties;
 
   /**
-   * @description 是否作为插槽使用，用于联动组件，可参考旋转校验组件
+   * @description Whether used as a slot for linked components.
    * @default false
    */
   isSlot?: boolean;
 
   /**
-   * @description 验证成功的提示
-   * @default '验证通过'
+   * @description Success message.
+   * @default '????'
    */
   successText?: string;
 
   /**
-   * @description 提示文字
-   * @default '请按住滑块拖动'
+   * @description Prompt text.
+   * @default '???????'
    */
   text?: string;
 }
 
 export interface SliderRotateCaptchaProps {
   /**
-   * @description 旋转的角度
+   * @description Allowed rotation difference.
    * @default 20
    */
   diffDegree?: number;
 
   /**
-   * @description 图片的宽度
+   * @description Image size.
    * @default 260
    */
   imageSize?: number;
 
   /**
-   * @description 图片的样式
+   * @description Image wrapper style.
    * @default {}
    */
   imageWrapperStyle?: CSSProperties;
 
   /**
-   * @description 最大旋转角度
+   * @description Maximum rotation angle.
    * @default 270
    */
   maxDegree?: number;
 
   /**
-   * @description 最小旋转角度
+   * @description Minimum rotation angle.
    * @default 90
    */
   minDegree?: number;
 
   /**
-   * @description 图片的地址
+   * @description Image source.
    */
   src?: string;
   /**
-   * @description 默认提示文本
+   * @description Default prompt text.
    */
   defaultTip?: string;
 }
 
 export interface SliderTranslateCaptchaProps {
   /**
-   * @description 拼图的宽度
+   * @description Puzzle width.
    * @default 420
    */
   canvasWidth?: number;
   /**
-   * @description 拼图的高度
+   * @description Puzzle height.
    * @default 280
    */
   canvasHeight?: number;
   /**
-   * @description 切块上正方形的长度
+   * @description Square block side length.
    * @default 42
    */
   squareLength?: number;
   /**
-   * @description 切块上圆形的半径
+   * @description Circle radius.
    * @default 10
    */
   circleRadius?: number;
   /**
-   * @description 图片的地址
+   * @description Image source.
    */
   src?: string;
   /**
-   * @description 允许的最大差距
+   * @description Allowed position difference.
    * @default 3
    */
   diffDistance?: number;
   /**
-   * @description 默认提示文本
+   * @description Default prompt text.
    */
   defaultTip?: string;
 }

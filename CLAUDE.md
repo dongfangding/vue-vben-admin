@@ -72,3 +72,14 @@ vue-vben-admin/
 - **Mock**: Nitro server (h3) with file-based routing
 - **State**: Pinia stores
 - **i18n**: Custom solution with JSON locale files
+
+## gstack
+
+- 当前项目已集成项目内 gstack，仓库位置：`.claude/skills/gstack`
+- 当前 Windows 环境使用 `PowerShell` 作为默认终端；执行 gstack 的 `setup` 时应使用 `D:\Git\bin\bash.exe`
+- 当前 Codex 技能安装位置：`C:\Users\Administrator\.codex\skills`
+- 需要网页浏览、截图、页面交互、站点检查时，优先使用 gstack 的 `/browse` 能力，不要使用 `mcp__claude-in-chrome__*` 工具
+- 如需重新生成 Codex 技能，可在项目根目录执行：`D:\Git\bin\bash.exe -lc "cd '/d/IdeaWorkspaces/vue-vben-admin/.claude/skills/gstack' && ./setup --host codex"`
+
+可用 gstack 技能：
+`/office-hours`、`/plan-ceo-review`、`/plan-eng-review`、`/plan-design-review`、`/design-consultation`、`/design-shotgun`、`/design-html`、`/review`、`/ship`、`/land-and-deploy`、`/canary`、`/benchmark`、`/browse`、`/open-gstack-browser`、`/qa`、`/qa-only`、`/design-review`、`/setup-browser-cookies`、`/setup-deploy`、`/retro`、`/investigate`、`/document-release`、`/codex`、`/cso`、`/autoplan`、`/pair-agent`、`/careful`、`/freeze`、`/guard`、`/unfreeze`、`/gstack-upgrade`、`/learn`
