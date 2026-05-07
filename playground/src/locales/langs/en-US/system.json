@@ -1,5 +1,29 @@
 {
   "title": "System Management",
+  "user": {
+    "title": "User Management",
+    "list": "User List",
+    "name": "User",
+    "id": "User ID",
+    "username": "Username",
+    "nickname": "Nickname",
+    "email": "Email",
+    "mobile": "Mobile",
+    "sex": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "avatar": "Avatar",
+    "password": "Password",
+    "role": "Role",
+    "dept": "Department",
+    "deptTree": "Department Tree",
+    "allDept": "All Departments",
+    "status": "Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "createTime": "Create Time",
+    "operation": "Operation"
+  },
   "dept": {
     "name": "Department",
     "title": "Department Management",
@@ -28,7 +52,7 @@
     "path": "Route Path",
     "component": "Component",
     "status": "Status",
-    "authCode": "Auth Code",
+    "permission": "Auth Code",
     "badge": "Badge",
     "operation": "Operation",
     "linkSrc": "Link Address",
@@ -56,10 +80,26 @@
     "roleName": "Role Name",
     "id": "Role ID",
     "status": "Status",
+    "enable": "Enable",
     "remark": "Remark",
     "createTime": "Creation Time",
     "operation": "Operation",
     "permissions": "Permissions",
-    "setPermissions": "Permissions"
+    "setPermissions": "Permissions",
+    "level": "Role Level",
+    "levelHelp": "The smaller the number, the higher the level. Low-level characters cannot operate high-level character data.",
+    "ipLimit": "IP Whitelist",
+    "ipLimitHelp": "When specifying an IP, only matching IPs can be logged in. Multiple ones are separated by commas.",
+    "sort": "Sort Order",
+    "isAdmin": "Is Admin"
+  },
+  "job": {
+    "title": "Job Management"
+  },
+  "dict": {
+    "title": "Dictionary Management"
+  },
+  "log": {
+    "title": "Operation Log"
   }
 }

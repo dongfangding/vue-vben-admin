@@ -35,7 +35,6 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       loginLoading.value = true;
       const { accessToken } = await loginApi(params);
-
       // 如果成功获取到 accessToken
       if (accessToken) {
         accessStore.setAccessToken(accessToken);
@@ -61,9 +60,9 @@ export const useAuthStore = defineStore('auth', () => {
               );
         }
 
-        if (userInfo?.realName) {
+        if (userInfo?.nickname) {
           notification.success({
-            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.nickname}`,
             duration: 3,
             message: $t('authentication.loginSuccess'),
           });

@@ -23,6 +23,11 @@ export function getMenuTypeOptions() {
 
 export function useColumns(
   onActionClick: OnActionClickFn<SystemMenuApi.SystemMenu>,
+  actionVisible?: {
+    append?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  },
 ): VxeTableGridOptions<SystemMenuApi.SystemMenu>['columns'] {
   return [
     {
@@ -42,8 +47,8 @@ export function useColumns(
       width: 100,
     },
     {
-      field: 'authCode',
-      title: $t('system.menu.authCode'),
+      field: 'permission',
+      title: $t('system.menu.permission'),
       width: 200,
     },
     {
@@ -52,7 +57,6 @@ export function useColumns(
       title: $t('system.menu.path'),
       width: 200,
     },
-
     {
       align: 'left',
       field: 'component',
@@ -68,19 +72,30 @@ export function useColumns(
           case 'link': {
             return row.meta?.link ?? '';
           }
+          default: {
+            return '';
+          }
         }
-        return '';
       },
       minWidth: 200,
       title: $t('system.menu.component'),
     },
     {
-      cellRender: { name: 'CellTag' },
-      field: 'status',
+      cellRender: {
+        name: 'CellTag',
+        attrs: {
+          checkedValue: true,
+          unCheckedValue: false,
+        },
+        options: [
+          { color: 'success', label: $t('common.enabled'), value: true },
+          { color: 'error', label: $t('common.disabled'), value: false },
+        ],
+      },
+      field: 'enabled',
       title: $t('system.menu.status'),
       width: 100,
     },
-
     {
       align: 'right',
       cellRender: {
@@ -92,10 +107,17 @@ export function useColumns(
         options: [
           {
             code: 'append',
+            show: actionVisible?.append ?? true,
             text: '新增下级',
           },
-          'edit', // 默认的编辑按钮
-          'delete', // 默认的删除按钮
+          {
+            code: 'edit',
+            show: actionVisible?.edit ?? true,
+          },
+          {
+            code: 'delete',
+            show: actionVisible?.delete ?? true,
+          },
         ],
       },
       field: 'operation',
@@ -103,7 +125,7 @@ export function useColumns(
       headerAlign: 'center',
       showOverflow: false,
       title: $t('system.menu.operation'),
-      width: 200,
+      width: 220,
     },
   ];
 }

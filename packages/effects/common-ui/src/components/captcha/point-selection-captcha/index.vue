@@ -10,6 +10,7 @@ import { useCaptchaPoints } from '../hooks/useCaptchaPoints';
 import CaptchaCard from './point-selection-captcha-card.vue';
 
 const props = withDefaults(defineProps<PointSelectionCaptchaProps>(), {
+  autoConfirmCount: 0,
   height: '220px',
   hintImage: '',
   hintText: '',
@@ -40,13 +41,20 @@ function getElementPosition(element: HTMLElement) {
   };
 }
 
+function clear() {
+  try {
+    clearPoints();
+  } catch (error) {
+    console.error('Error in clear:', error);
+  }
+}
+
 function handleClick(e: MouseEvent) {
   try {
     const dom = e.currentTarget as HTMLElement;
     if (!dom) throw new Error('Element not found');
 
     const { x: domX, y: domY } = getElementPosition(dom);
-
     const mouseX = e.clientX + window.scrollX;
     const mouseY = e.clientY + window.scrollY;
 
@@ -56,40 +64,32 @@ function handleClick(e: MouseEvent) {
 
     const xPos = mouseX - domX;
     const yPos = mouseY - domY;
-
     const rect = dom.getBoundingClientRect();
 
-    // 点击位置边界校验
     if (xPos < 0 || yPos < 0 || xPos > rect.width || yPos > rect.height) {
       console.warn('Click position is out of the valid range');
       return;
     }
 
-    const x = Math.ceil(xPos);
-    const y = Math.ceil(yPos);
-
     const point = {
       i: points.length,
       t: Date.now(),
-      x,
-      y,
+      x: Math.ceil(xPos),
+      y: Math.ceil(yPos),
     };
 
     addPoint(point);
-
     emit('click', point);
+
+    const nextCount = points.length;
+    if (props.autoConfirmCount > 0 && nextCount >= props.autoConfirmCount) {
+      emit('confirm', points, clear);
+    }
+
     e.stopPropagation();
     e.preventDefault();
   } catch (error) {
     console.error('Error in handleClick:', error);
-  }
-}
-
-function clear() {
-  try {
-    clearPoints();
-  } catch (error) {
-    console.error('Error in clear:', error);
   }
 }
 
@@ -103,7 +103,6 @@ function handleRefresh() {
 }
 
 function handleConfirm() {
-  if (!props.showConfirm) return;
   try {
     emit('confirm', points, clear);
   } catch (error) {
@@ -169,7 +168,7 @@ function handleConfirm() {
         v-else-if="hintText"
         class="border-border flex-center h-10 w-full rounded border"
       >
-        {{ `${$t('ui.captcha.clickInOrder')}` + `【${hintText}】` }}
+        {{ `${$t('ui.captcha.clickInOrder')} [${hintText}]` }}
       </div>
     </template>
   </CaptchaCard>

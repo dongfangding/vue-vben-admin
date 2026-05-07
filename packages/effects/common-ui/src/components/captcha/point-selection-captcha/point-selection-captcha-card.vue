@@ -50,7 +50,7 @@ function handleClick(e: MouseEvent) {
 }
 </script>
 <template>
-  <Card :style="rootStyles" aria-labelledby="captcha-title" role="region">
+  <Card :style="rootStyles" aria-labelledby="captcha-title" role="region" class="shrink-0">
     <CardHeader class="p-0">
       <CardTitle id="captcha-title" class="flex items-center justify-between">
         <template v-if="$slots.title">
@@ -70,7 +70,7 @@ function handleClick(e: MouseEvent) {
         :alt="$t('ui.captcha.alt')"
         :src="captchaImage"
         :style="captchaStyles"
-        class="relative z-10"
+        class="relative z-10 block max-w-none shrink-0"
         @click="handleClick"
       />
       <div class="absolute inset-0">

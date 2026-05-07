@@ -1,7 +1,7 @@
 export interface UserInfo {
   id: number;
   password: string;
-  realName: string;
+  nickname: string;
   roles: string[];
   username: string;
   homePath?: string;
@@ -16,14 +16,14 @@ export const MOCK_USERS: UserInfo[] = [
   {
     id: 0,
     password: '123456',
-    realName: 'Vben',
+    nickname: 'Vben',
     roles: ['super'],
     username: 'vben',
   },
   {
     id: 1,
     password: '123456',
-    realName: 'Admin',
+    nickname: 'Admin',
     roles: ['admin'],
     username: 'admin',
     homePath: '/workspace',
@@ -31,7 +31,7 @@ export const MOCK_USERS: UserInfo[] = [
   {
     id: 2,
     password: '123456',
-    realName: 'Jack',
+    nickname: 'Jack',
     roles: ['user'],
     username: 'jack',
     homePath: '/analytics',
@@ -193,7 +193,7 @@ export const MOCK_MENUS = [
 
 export const MOCK_MENU_LIST = [
   {
-    id: 1,
+    id: 102,
     name: 'Workspace',
     status: 1,
     type: 'menu',
@@ -227,7 +227,7 @@ export const MOCK_MENU_LIST = [
         pid: 2,
         path: '/system/menu',
         name: 'SystemMenu',
-        authCode: 'System:Menu:List',
+        permission: 'System:Menu:List',
         status: 1,
         type: 'menu',
         meta: {
@@ -242,7 +242,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuCreate',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Create',
+            permission: 'System:Menu:Create',
             meta: { title: 'common.create' },
           },
           {
@@ -251,7 +251,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuEdit',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Edit',
+            permission: 'System:Menu:Edit',
             meta: { title: 'common.edit' },
           },
           {
@@ -260,7 +260,7 @@ export const MOCK_MENU_LIST = [
             name: 'SystemMenuDelete',
             status: 1,
             type: 'button',
-            authCode: 'System:Menu:Delete',
+            permission: 'System:Menu:Delete',
             meta: { title: 'common.delete' },
           },
         ],
@@ -272,7 +272,7 @@ export const MOCK_MENU_LIST = [
         name: 'SystemDept',
         status: 1,
         type: 'menu',
-        authCode: 'System:Dept:List',
+        permission: 'System:Dept:List',
         meta: {
           icon: 'carbon:container-services',
           title: 'system.dept.title',
@@ -280,30 +280,30 @@ export const MOCK_MENU_LIST = [
         component: '/system/dept/list',
         children: [
           {
-            id: 20_401,
+            id: 20_201,
             pid: 202,
             name: 'SystemDeptCreate',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Create',
+            permission: 'System:Dept:Create',
             meta: { title: 'common.create' },
           },
           {
-            id: 20_402,
+            id: 20_202,
             pid: 202,
             name: 'SystemDeptEdit',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Edit',
+            permission: 'System:Dept:Edit',
             meta: { title: 'common.edit' },
           },
           {
-            id: 20_403,
+            id: 20_203,
             pid: 202,
             name: 'SystemDeptDelete',
             status: 1,
             type: 'button',
-            authCode: 'System:Dept:Delete',
+            permission: 'System:Dept:Delete',
             meta: { title: 'common.delete' },
           },
         ],

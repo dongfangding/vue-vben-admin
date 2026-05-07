@@ -16,6 +16,7 @@ import { get, isFunction, isString } from '@vben/utils';
 import { objectOmit } from '@vueuse/core';
 import { Button, Image, Popconfirm, Switch, Tag } from 'ant-design-vue';
 
+import { DictTag, DictText } from '#/components/dict';
 import { $t } from '#/locales';
 
 import { useVbenForm } from './form';
@@ -38,7 +39,7 @@ setupVbenVxeTable({
         proxyConfig: {
           autoLoad: true,
           response: {
-            result: 'items',
+            result: 'content',
             total: 'total',
             list: '',
           },
@@ -101,6 +102,31 @@ setupVbenVxeTable({
       },
     });
 
+    vxeUI.renderer.add('CellDictText', {
+      renderTableDefault({ props }, { column, row }) {
+        return [
+          h(DictText, {
+            dictCode: props?.dictCode,
+            matchField: props?.matchField,
+            value: row[column.field],
+          }),
+        ];
+      },
+    });
+
+    vxeUI.renderer.add('CellDictTag', {
+      renderTableDefault({ props }, { column, row }) {
+        return [
+          h(DictTag, {
+            color: props?.color,
+            dictCode: props?.dictCode,
+            matchField: props?.matchField,
+            value: row[column.field],
+          }),
+        ];
+      },
+    });
+
     vxeUI.renderer.add('CellSwitch', {
       renderTableDefault({ attrs, props }, { column, row }) {
         const loadingKey = `__loading_${column.field}`;
@@ -110,6 +136,7 @@ setupVbenVxeTable({
           unCheckedChildren: $t('common.disabled'),
           unCheckedValue: 0,
           ...props,
+          ...attrs,   // 合并 attrs，确保用户的配置生效
           checked: row[column.field],
           loading: row[loadingKey] ?? false,
           'onUpdate:checked': onChange,

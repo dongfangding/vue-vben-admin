@@ -31,9 +31,17 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "build:prod:play": {
+      "dependsOn": ["@vben/playground#build:prod"],
+      "outputs": ["dist/**", "dist.zip"]
+    },
     "@vben/backend-mock#build": {
       "dependsOn": ["^build"],
       "outputs": [".nitro/**", ".output/**"]
+    },
+    "@vben/playground#build:prod": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "dist.zip"]
     },
     "test:e2e": {},
     "dev": {

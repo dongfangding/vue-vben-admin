@@ -226,6 +226,24 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        name: 'DictExample',
+        path: '/examples/dict',
+        meta: {
+          icon: 'mdi:book-open-variant-outline',
+          title: $t('examples.dict.title'),
+        },
+        children: [
+          {
+            name: 'DictBasicExample',
+            path: '/examples/dict/basic',
+            component: () => import('#/views/examples/dict/basic.vue'),
+            meta: {
+              title: $t('examples.dict.basic'),
+            },
+          },
+        ],
+      },
+      {
         name: 'ModalExample',
         path: '/examples/modal',
         component: () => import('#/views/examples/modal/index.vue'),

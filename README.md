@@ -72,12 +72,40 @@ pnpm install
 
 ```bash
 pnpm dev
+
+# 启动管理后台的版本
+pnpm dev:play
 ```
 
 4. Build
 
 ```bash
 pnpm build
+```
+
+### Playground Production Build
+
+If you only need to build the `playground` app for production, use one of the following commands from the repository root:
+
+```bash
+# Build playground through the monorepo build pipeline
+pnpm build:play
+
+# Build playground with the production Vite mode directly
+pnpm --filter @vben/playground run build:prod
+```
+
+Production build settings for `playground` are controlled by [playground/.env.production](./playground/.env.production):
+
+- `VITE_BASE`: static asset and router base path
+- `VITE_GLOB_API_URL`: API endpoint used in production
+- `VITE_COMPRESS`: asset compression mode
+- `VITE_ARCHIVER=true`: generate `playground/dist.zip` after build
+
+If you deploy to a subdirectory, update `VITE_BASE` first, for example:
+
+```bash
+VITE_BASE=/playground/
 ```
 
 ## Change Log

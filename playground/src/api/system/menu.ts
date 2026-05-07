@@ -24,14 +24,14 @@ export namespace SystemMenuApi {
   /** 系统菜单 */
   export interface SystemMenu {
     [key: string]: any;
-    /** 后端权限标识 */
-    authCode: string;
     /** 子级 */
     children?: SystemMenu[];
     /** 组件 */
     component?: string;
+    /** 是否启用 */
+    enabled: boolean;
     /** 菜单ID */
-    id: string;
+    menuId: number;
     /** 菜单元数据 */
     meta?: {
       /** 激活时显示的图标 */
@@ -81,10 +81,14 @@ export namespace SystemMenuApi {
     name: string;
     /** 路由路径 */
     path: string;
+    /** 后端权限标识 */
+    permission: string;
     /** 父级ID */
-    pid: string;
+    pid: number;
     /** 重定向 */
     redirect?: string;
+    /** 标题 */
+    title: string;
     /** 菜单类型 */
     type: (typeof MenuTypes)[number];
   }
@@ -95,25 +99,19 @@ export namespace SystemMenuApi {
  */
 async function getMenuList() {
   return requestClient.get<Array<SystemMenuApi.SystemMenu>>(
-    '/system/menu/list',
+    '/sys-menu/tree-all',
   );
 }
 
-async function isMenuNameExists(
-  name: string,
-  id?: SystemMenuApi.SystemMenu['id'],
-) {
+async function isMenuNameExists(name: string, menuId?: number) {
   return requestClient.get<boolean>('/system/menu/name-exists', {
-    params: { id, name },
+    params: { menuId, name },
   });
 }
 
-async function isMenuPathExists(
-  path: string,
-  id?: SystemMenuApi.SystemMenu['id'],
-) {
+async function isMenuPathExists(path: string, menuId?: number) {
   return requestClient.get<boolean>('/system/menu/path-exists', {
-    params: { id, path },
+    params: { menuId, path },
   });
 }
 
@@ -122,9 +120,10 @@ async function isMenuPathExists(
  * @param data 菜单数据
  */
 async function createMenu(
-  data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
+  data: Omit<SystemMenuApi.SystemMenu, 'children' | 'menuId'>,
 ) {
-  return requestClient.post('/system/menu', data);
+  data.title = data.meta.title;
+  return requestClient.post('/sys-menu/persist', data);
 }
 
 /**
@@ -134,18 +133,20 @@ async function createMenu(
  * @param data 菜单数据
  */
 async function updateMenu(
-  id: string,
-  data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
+  menuId: number,
+  data: Omit<SystemMenuApi.SystemMenu, 'children' | 'menuId'>,
 ) {
-  return requestClient.put(`/system/menu/${id}`, data);
+  data.title = data.meta.title;
+  data.menuId = menuId;
+  return requestClient.post('/sys-menu/persist', data);
 }
 
 /**
  * 删除菜单
- * @param id 菜单 ID
+ * @param menuId 菜单 ID
  */
-async function deleteMenu(id: string) {
-  return requestClient.delete(`/system/menu/${id}`);
+async function deleteMenu(menuId: number) {
+  return requestClient.post(`/sys-menu/delete`, { id: menuId });
 }
 
 export {

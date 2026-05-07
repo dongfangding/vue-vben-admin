@@ -4,31 +4,46 @@ import { verifyAccessToken } from '~/utils/jwt-utils';
 import { getMenuIds, MOCK_MENU_LIST } from '~/utils/mock-data';
 import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 
-const formatterCN = new Intl.DateTimeFormat('zh-CN', {
-  timeZone: 'Asia/Shanghai',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
-
 const menuIds = getMenuIds(MOCK_MENU_LIST);
+
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
+    const createDate = faker.date.between({
+      from: '2022-01-01',
+      to: '2025-01-01',
+    });
+    const updateDate = faker.date.between({
+      from: createDate,
+      to: '2025-01-01',
+    });
     const dataItem: Record<string, any> = {
-      id: faker.string.uuid(),
+      roleId: i + 1,
       name: faker.commerce.product(),
-      status: faker.helpers.arrayElement([0, 1]),
-      createTime: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-      permissions: faker.helpers.arrayElements(menuIds),
-      remark: faker.lorem.sentence(),
+      enable: faker.datatype.boolean(),
+      createTime: Math.floor(createDate.getTime() / 1000),
+      updateTime: Math.floor(updateDate.getTime() / 1000),
+      formatCreateTime: formatDate(createDate),
+      formatUpdateTime: formatDate(updateDate),
+      description: faker.lorem.sentence(),
+      level: faker.number.int({ max: 10, min: 1 }),
+      ipLimit: '',
+      sort: faker.number.int({ max: 100, min: 1 }),
+      isAdmin: faker.datatype.boolean(),
+      createBy: faker.person.fullName(),
+      updateBy: faker.person.fullName(),
+      menuIds: faker.helpers.arrayElements(menuIds),
     };
 
     dataList.push(dataItem);
@@ -46,14 +61,14 @@ export default eventHandler(async (event) => {
   }
 
   const {
-    page = 1,
+    pageNum = 1,
     pageSize = 20,
     name,
-    id,
-    remark,
+    roleId,
+    description,
     startTime,
     endTime,
-    status,
+    enable,
   } = getQuery(event);
   let listData = structuredClone(mockData);
   if (name) {
@@ -61,14 +76,16 @@ export default eventHandler(async (event) => {
       item.name.toLowerCase().includes(String(name).toLowerCase()),
     );
   }
-  if (id) {
+  if (roleId) {
     listData = listData.filter((item) =>
-      item.id.toLowerCase().includes(String(id).toLowerCase()),
+      String(item.roleId).includes(String(roleId)),
     );
   }
-  if (remark) {
+  if (description) {
     listData = listData.filter((item) =>
-      item.remark?.toLowerCase()?.includes(String(remark).toLowerCase()),
+      item.description
+        ?.toLowerCase()
+        ?.includes(String(description).toLowerCase()),
     );
   }
   if (startTime) {
@@ -77,8 +94,12 @@ export default eventHandler(async (event) => {
   if (endTime) {
     listData = listData.filter((item) => item.createTime <= endTime);
   }
-  if (['0', '1'].includes(status as string)) {
-    listData = listData.filter((item) => item.status === Number(status));
+  if (['false', 'true'].includes(enable as string)) {
+    listData = listData.filter((item) => item.enable === (enable === 'true'));
   }
-  return usePageResponseSuccess(page as string, pageSize as string, listData);
+  return usePageResponseSuccess(
+    pageNum as string,
+    pageSize as string,
+    listData,
+  );
 });

@@ -46,20 +46,23 @@ npm 脚本是项目常见的配置，用于执行一些常见的任务，比如�
 ```json
 {
   "scripts": {
-    // 构建项目
+    // 构建整个仓库（默认走 production 模式）
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
-    // 构建项目并分析
+    // 构建并分析产物体积
     "build:analyze": "turbo build:analyze",
-    // 构建本地 docker 镜像
-    "build:docker": "./build-local-docker-image.sh",
+    // 单独构建 Ant Design Vue 版本
     // 单独构建 web-antd 应用
     "build:antd": "pnpm run build --filter=@vben/web-antd",
+    // 单独构建 Antdv Next 版本
+    "build:antdv-next": "pnpm run build --filter=@vben/web-antdv-next",
+    // 构建本地 docker 镜像
+    "build:docker": "./scripts/deploy/build-local-docker-image.sh",
     // 单独构建文档
     "build:docs": "pnpm run build --filter=@vben/docs",
     // 单独构建 web-ele 应用
     "build:ele": "pnpm run build --filter=@vben/web-ele",
     // 单独构建 web-naive 应用
-    "build:naive": "pnpm run build --filter=@vben/naive",
+    "build:naive": "pnpm run build --filter=@vben/web-naive",
     // 单独构建 web-tdesign 应用
     "build:tdesign": "pnpm run build --filter=@vben/web-tdesign",
     // 单独构建 playground 应用
@@ -71,7 +74,7 @@ npm 脚本是项目常见的配置，用于执行一些常见的任务，比如�
     // 检查循环引用
     "check:circular": "vsh check-circular",
     // 检查拼写
-    "check:cspell": "cspell lint **/*.ts **/README.md .changeset/*.md --no-progress"
+    "check:cspell": "cspell lint **/*.ts **/README.md .changeset/*.md --no-progress",
     // 检查依赖
     "check:dep": "vsh check-dep",
     // 检查类型
@@ -84,12 +87,16 @@ npm 脚本是项目常见的配置，用于执行一些常见的任务，比如�
     "dev": "turbo-run dev",
     // 启动web-antd应用
     "dev:antd": "pnpm -F @vben/web-antd run dev",
+    // 启动web-antdv-next应用
+    "dev:antdv-next": "pnpm -F @vben/web-antdv-next run dev",
     // 启动文档
     "dev:docs": "pnpm -F @vben/docs run dev",
     // 启动web-ele应用
     "dev:ele": "pnpm -F @vben/web-ele run dev",
     // 启动web-naive应用
     "dev:naive": "pnpm -F @vben/web-naive run dev",
+    // 启动web-tdesign应用
+    "dev:tdesign": "pnpm -F @vben/web-tdesign run dev",
     // 启动演示应用
     "dev:play": "pnpm -F @vben/playground run dev",
     // 格式化代码
@@ -100,8 +107,6 @@ npm 脚本是项目常见的配置，用于执行一些常见的任务，比如�
     "postinstall": "pnpm -r run stub --if-present",
     // 只允许使用pnpm
     "preinstall": "npx only-allow pnpm",
-    // lefthook的安装
-    "prepare": "is-ci || lefthook install",
     // 预览应用
     "preview": "turbo-run preview",
     // 包规范检查
@@ -110,13 +115,66 @@ npm 脚本是项目常见的配置，用于执行一些常见的任务，比如�
     "reinstall": "pnpm clean --del-lock && pnpm install",
     // 运行 vitest 单元测试
     "test:unit": "vitest run --dom",
+    // 运行 e2e 测试
+    "test:e2e": "turbo run test:e2e",
     // 更新项目依赖
-    "update:deps": " pnpm update --latest --recursive",
+    "update:deps": "npx taze -r -w",
     // changeset生成提交集
-    "version": "pnpm exec changeset version && pnpm install --no-frozen-lockfile"
+    "version": "pnpm exec changeset version && pnpm install --no-frozen-lockfile",
+    // 生成 pnpm catalog 配置
+    "catalog": "pnpx codemod pnpm/catalog"
   }
 }
 ```
+
+## 构建脚本速查
+
+当前仓库的构建脚本分成两层：
+
+- 根目录脚本负责指定“构建哪些应用”
+- 应用目录脚本负责指定“使用哪个构建环境”
+
+### 根目录构建脚本
+
+以下命令都需要在仓库根目录执行：
+
+```bash
+# 构建整个仓库，默认使用各应用自己的 production 模式
+pnpm build
+
+# 构建并分析产物体积
+pnpm build:analyze
+
+# 单独构建指定应用
+pnpm build:antd
+pnpm build:antdv-next
+pnpm build:ele
+pnpm build:naive
+pnpm build:tdesign
+pnpm build:play
+pnpm build:docs
+
+# 构建本地 Docker 镜像
+pnpm build:docker
+```
+
+### 应用内部构建脚本
+
+各前端应用当前统一使用 Vite 的 `mode` 机制切换环境。以 `apps/web-antd/package.json` 为例：
+
+```json
+{
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  }
+}
+```
+
+`web-antdv-next`、`web-ele`、`web-naive`、`web-tdesign`、`playground` 也采用相同模式。
 
 ## 本地运行项目
 
@@ -154,46 +212,94 @@ pnpm dev:docs
 
 ## 区分构建环境
 
-在实际的业务开发中，通常会在构建时区分多种环境，如测试环境`test`、生产环境`build`等。
+当前仓库区分环境的核心不是根目录 `build:*` 脚本，而是各应用内部的 `vite --mode xxx`。
 
-此时可以修改三个文件，在其中增加对应的脚本配置来达到区分生产环境的效果。
+项目实际支持的环境文件加载顺序如下：
 
-以`@vben/web-antd`添加测试环境`test`为例：
-
-- `apps\web-antd\package.json`
-
-```json
-"scripts": {
-  "build:prod": "pnpm vite build --mode production",
-  "build:test": "pnpm vite build --mode test",
-  "build:analyze": "pnpm vite build --mode analyze",
-  "dev": "pnpm vite --mode development",
-  "preview": "vite preview",
-  "typecheck": "vue-tsc --noEmit --skipLibCheck"
-},
+```bash
+.env
+.env.local
+.env.[mode]
+.env.[mode].local
 ```
 
-增加命令`"build:test"`, 并将原`"build"`改为`"build:prod"`以避免同时构建两个环境的包。
+这意味着：
 
-- `package.json`
+- 执行 `pnpm build` 时，应用默认读取 `.env` 和 `.env.production`
+- 执行 `pnpm dev:*` 时，应用默认读取 `.env` 和 `.env.development`
+- 执行 `build:analyze` 时，应用会读取 `.env` 和 `.env.analyze`
+
+以 `apps/web-antd` 为例，当前仓库中已经存在：
+
+```bash
+.env
+.env.development
+.env.production
+.env.analyze
+```
+
+### 当前仓库已有的环境构建方式
+
+```bash
+# 开发环境
+pnpm dev:antd
+
+# 生产环境打包
+pnpm build:antd
+
+# 分析包体积
+pnpm --filter @vben/web-antd run build:analyze
+```
+
+### 新增 test、sit、uat 等环境
+
+如果业务上需要区分更多环境，推荐按下面的方式扩展，而不是直接覆盖现有 `build`：
+
+1. 在对应应用目录增加环境文件，例如 `apps/web-antd/.env.test`
+2. 在应用自己的 `package.json` 中补充构建脚本
+3. 如果希望在根目录统一调用，再补充根目录脚本
+4. 如果希望纳入 turbo 任务编排，再补充 `turbo.json`
+
+以 `@vben/web-antd` 增加 `test` 环境为例：
+
+#### 第一步：新增环境文件
+
+```bash
+apps/web-antd/.env.test
+```
+
+#### 第二步：修改应用脚本
 
 ```json
-"scripts": {
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
-    "build:analyze": "turbo build:analyze",
-    "build:antd": "pnpm run build --filter=@vben/web-antd",
-    "build-test:antd": "pnpm run build --filter=@vben/web-antd build:test",
-
-    ······
+{
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "build:test": "pnpm vite build --mode test",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  }
 }
 ```
 
-在根目录`package.json`中加入构建测试环境的命令
-
-- `turbo.json`
+#### 第三步：按需补充根目录脚本
 
 ```json
-"tasks": {
+{
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
+    "build:antd": "pnpm run build --filter=@vben/web-antd",
+    "build:test:antd": "pnpm --filter @vben/web-antd run build:test"
+  }
+}
+```
+
+#### 第四步：按需补充 turbo 任务
+
+```json
+{
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [
@@ -203,21 +309,36 @@ pnpm dev:docs
         ".vitepress/dist/**"
       ]
     },
-
-    "build-test:antd": {
+    "build:test:antd": {
       "dependsOn": ["@vben/web-antd#build:test"],
       "outputs": ["dist/**"]
     },
-
     "@vben/web-antd#build:test": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
-    },
-
-    ······
+    }
+  }
+}
 ```
 
-在`turbo.json`中加入相关依赖的命令
+#### 第五步：执行构建
+
+```bash
+# 直接在应用级别构建 test 环境
+pnpm --filter @vben/web-antd run build:test
+
+# 或者通过根目录统一调用
+pnpm build:test:antd
+```
+
+### 推荐约定
+
+为了便于长期维护，建议遵循以下命名：
+
+- 默认 `build` 保持为 `production`
+- 自定义环境统一使用 `build:test`、`build:sit`、`build:uat`
+- 根目录聚合脚本统一使用 `build:test:antd`、`build:uat:antd` 这种格式
+- 只有需要被 turbo 编排的环境，才在 `turbo.json` 中增加任务
 
 ## 公共静态资源
 

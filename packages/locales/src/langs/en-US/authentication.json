@@ -57,6 +57,10 @@
   "google": "Google",
   "loginAgainTitle": "Please Log In Again",
   "loginAgainSubTitle": "Your login session has expired. Please log in again to continue.",
+  "captchaInstruction": "Click the characters in order",
+  "captchaLoadFailed": "Failed to load captcha",
+  "captchaSelectRequired": "Select the characters first",
+  "captchaVerified": "Captcha verified",
   "layout": {
     "center": "Align Center",
     "alignLeft": "Align Left",

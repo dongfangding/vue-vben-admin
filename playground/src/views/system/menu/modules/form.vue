@@ -18,8 +18,6 @@ import { useVbenForm, z } from '#/adapter/form';
 import {
   createMenu,
   getMenuList,
-  isMenuNameExists,
-  isMenuPathExists,
   SystemMenuApi,
   updateMenu,
 } from '#/api/system/menu';
@@ -53,18 +51,7 @@ const schema: VbenFormSchema[] = [
     rules: z
       .string()
       .min(2, $t('ui.formRules.minLength', [$t('system.menu.menuName'), 2]))
-      .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
-      .refine(
-        async (value: string) => {
-          return !(await isMenuNameExists(value, formData.value?.id));
-        },
-        (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.menuName'),
-            value,
-          ]),
-        }),
-      ),
+      .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30])),
   },
   {
     component: 'ApiTreeSelect',
@@ -83,7 +70,7 @@ const schema: VbenFormSchema[] = [
       labelField: 'meta.title',
       showSearch: true,
       treeDefaultExpandAll: true,
-      valueField: 'id',
+      valueField: 'menuId',
       childrenField: 'children',
     },
     fieldName: 'pid',
@@ -136,17 +123,6 @@ const schema: VbenFormSchema[] = [
           return value.startsWith('/');
         },
         $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
-      )
-      .refine(
-        async (value: string) => {
-          return !(await isMenuPathExists(value, formData.value?.id));
-        },
-        (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.path'),
-            value,
-          ]),
-        }),
       ),
   },
   {
@@ -170,9 +146,6 @@ const schema: VbenFormSchema[] = [
         },
         $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
       )
-      .refine(async (value: string) => {
-        return await isMenuPathExists(value, formData.value?.id);
-      }, $t('system.menu.activePathMustExist'))
       .optional(),
   },
   {
@@ -248,21 +221,21 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    fieldName: 'authCode',
-    label: $t('system.menu.authCode'),
+    fieldName: 'permission',
+    label: $t('system.menu.permission'),
   },
   {
     component: 'RadioGroup',
     componentProps: {
       buttonStyle: 'solid',
       options: [
-        { label: $t('common.enabled'), value: 1 },
-        { label: $t('common.disabled'), value: 0 },
+        { label: $t('common.enabled'), value: true },
+        { label: $t('common.disabled'), value: false },
       ],
       optionType: 'button',
     },
-    defaultValue: 1,
-    fieldName: 'status',
+    defaultValue: true,
+    fieldName: 'enabled',
     label: $t('system.menu.status'),
   },
   {
@@ -481,8 +454,8 @@ async function onSubmit() {
     }
     delete data.linkSrc;
     try {
-      await (formData.value?.id
-        ? updateMenu(formData.value.id, data)
+      await (formData.value?.menuId
+        ? updateMenu(formData.value.menuId, data)
         : createMenu(data));
       drawerApi.close();
       emit('success');
@@ -492,7 +465,7 @@ async function onSubmit() {
   }
 }
 const getDrawerTitle = computed(() =>
-  formData.value?.id
+  formData.value?.menuId
     ? $t('ui.actionTitle.edit', [$t('system.menu.name')])
     : $t('ui.actionTitle.create', [$t('system.menu.name')]),
 );

@@ -39,6 +39,42 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import('#/views/system/dept/list.vue'),
       },
+      {
+        path: '/system/user',
+        name: 'SystemUser',
+        meta: {
+          icon: 'lucide:users',
+          title: $t('system.user.title'),
+        },
+        component: () => import('#/views/system/user/list.vue'),
+      },
+      {
+        path: '/system/job',
+        name: 'SystemJob',
+        meta: {
+          icon: 'mdi:briefcase-outline',
+          title: $t('system.job.title'),
+        },
+        component: () => import('#/views/system/job/list.vue'),
+      },
+      {
+        path: '/system/dict',
+        name: 'SystemDict',
+        meta: {
+          icon: 'mdi:book-open-variant-outline',
+          title: $t('system.dict.title'),
+        },
+        component: () => import('#/views/system/dict/list.vue'),
+      },
+      {
+        path: '/system/log',
+        name: 'SystemLog',
+        meta: {
+          icon: 'mdi:file-document-outline',
+          title: $t('system.log.title'),
+        },
+        component: () => import('#/views/system/log/list.vue'),
+      },
     ],
   },
 ];

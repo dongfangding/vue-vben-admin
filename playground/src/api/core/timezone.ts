@@ -15,7 +15,7 @@ export async function getTimezoneOptionsApi() {
  * 获取用户时区
  */
 export async function getTimezoneApi(): Promise<null | string | undefined> {
-  return requestClient.get<null | string | undefined>('/timezone/getTimezone');
+  return requestClient.get<null | string | undefined>('/timezone/get');
 }
 /**
  * 设置用户时区
