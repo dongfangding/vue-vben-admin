@@ -46,7 +46,7 @@ export interface PointSelectionCaptchaCardProps {
   paddingY?: number | string;
   /**
    * Captcha title.
-   * @default '?????'
+   * @default 'Please click in order'
    */
   title?: string;
   /**
@@ -112,13 +112,13 @@ export interface SliderCaptchaProps {
 
   /**
    * @description Success message.
-   * @default '????'
+   * @default 'Passed'
    */
   successText?: string;
 
   /**
    * @description Prompt text.
-   * @default '???????'
+   * @default 'Please drag the slider'
    */
   text?: string;
 }
